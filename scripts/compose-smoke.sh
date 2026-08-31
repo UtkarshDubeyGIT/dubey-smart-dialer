@@ -34,8 +34,8 @@ printf '\n'
 printf '%s\n' "[INFO] Checking the reviewer dashboard..."
 dashboard_page="$(curl --fail --silent --show-error \
     "http://127.0.0.1:${SMART_DIALER_API_PORT}/dashboard")"
-if ! printf '%s' "$dashboard_page" | grep -q "SmartDialer Control Room"; then
-    printf '%s\n' "[ERROR] Dashboard did not return the expected control-room page."
+if ! printf '%s' "$dashboard_page" | grep -q "data-decision-lab"; then
+    printf '%s\n' "[ERROR] Dashboard loaded, but the interactive Decision Lab was not present."
     exit 1
 fi
 
