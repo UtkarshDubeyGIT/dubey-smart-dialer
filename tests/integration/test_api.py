@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -89,14 +90,30 @@ def test_dashboard_styles_are_packaged_with_the_application(
 
     assert response.status_code == 200
     assert interaction.status_code == 200
-    assert "--orange: #ff641e" in response.text
+    assert "--accent: #d95f28" in response.text
+    assert "--canvas: #f7f6f3" in response.text
     assert ".decision-lab" in response.text
-    assert "radial-gradient" in response.text
+    assert "gradient" not in response.text
+    assert "color-scheme: light" in response.text
     assert "Graduate AI/ML systems assignment" in dashboard.text
     assert "Watch the dialer decide" in dashboard.text
     assert 'data-decision-lab' in dashboard.text
-    assert 'href="/static/dashboard.css?v=2"' in dashboard.text
-    assert 'src="/static/dashboard.js?v=2"' in dashboard.text
+    assert 'href="/static/dashboard.css?v=3"' in dashboard.text
+    assert 'src="/static/dashboard.js?v=3"' in dashboard.text
+
+
+def test_submission_is_attributed_and_readme_exposes_live_frontend(
+    client: TestClient,
+) -> None:
+    dashboard = client.get("/dashboard")
+    readme = Path("README.md").read_text()
+
+    assert "Designed and engineered by Utkarsh Dubey" in dashboard.text
+    assert "mailto:utkarsh.dubey.ug23@nsut.ac.in" in dashboard.text
+    assert "https://github.com/UtkarshDubeyGIT" in dashboard.text
+    assert "https://dialer-dashboard.dubey.page/dashboard" in readme
+    assert "docs/dashboard-preview.jpg" in readme
+    assert "Designed and engineered by **Utkarsh Dubey**" in readme
 
 
 def test_decision_lab_runs_the_production_pacing_and_safety_path(

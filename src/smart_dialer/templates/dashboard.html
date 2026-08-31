@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fffaf6">
+  <meta name="theme-color" content="#f7f6f3">
   <meta name="description" content="A graduate AI/ML systems assignment: confidence-bounded predictive dialing for human collections teams.">
   <meta property="og:title" content="CredResolve SmartDialer · Live AI/ML systems demo">
   <meta property="og:description" content="See the production pacing engine and mandatory Safety Controller make an explainable decision in real time.">
   <title>Live AI/ML SmartDialer · CredResolve</title>
-  <link rel="stylesheet" href="/static/dashboard.css?v=2">
-  <script src="/static/dashboard.js?v=2" defer></script>
+  <link rel="stylesheet" href="/static/dashboard.css?v=3">
+  <script src="/static/dashboard.js?v=3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to the live demo</a>
@@ -28,6 +28,7 @@
       </nav>
       <div class="topbar-actions">
         <span class="live-status"><i></i> Production demo</span>
+        <a class="author-link" href="https://github.com/UtkarshDubeyGIT" rel="author">Utkarsh Dubey</a>
         <a class="api-link" href="/docs">API docs <span>↗</span></a>
       </div>
     </header>
@@ -37,6 +38,11 @@
         <p class="course-label"><span>Graduate AI/ML</span> systems assignment</p>
         <h1 id="page-title"><span class="sr-only">Watch the dialer decide.</span><span aria-hidden="true">Watch the dialer <em>decide.</em></span></h1>
         <p class="hero-lede">A safety-first predictive dialer for human agents. It estimates how many borrowers to call, quantifies uncertainty, and refuses capacity risk it cannot explain.</p>
+        <div class="author-credit" aria-label="Designed and engineered by Utkarsh Dubey">
+          <span class="author-monogram" aria-hidden="true">UD</span>
+          <p><small>Designed and engineered by</small><strong>Utkarsh Dubey</strong></p>
+          <a href="https://github.com/UtkarshDubeyGIT" rel="author">GitHub ↗</a>
+        </div>
         <div class="hero-actions">
           <button class="primary-action" type="button" data-run-demo>Run the live decision</button>
           <a class="text-action" href="#architecture">Read the design logic <span>↓</span></a>
@@ -85,7 +91,7 @@
       </article>
     </section>
 
-    <section class="proof-rail" aria-label="Implementation proof">
+    <section class="proof-rail reveal" aria-label="Implementation proof">
       <div><strong>95%</strong><span>one-sided confidence</span></div>
       <div><strong>1%</strong><span>absolute risk ceiling</span></div>
       <div><strong>30</strong><span>samples before prediction</span></div>
@@ -93,7 +99,7 @@
       <div><strong>0</strong><span>real telecom calls</span></div>
     </section>
 
-    <section class="problem-section" aria-labelledby="problem-title">
+    <section class="problem-section reveal" aria-labelledby="problem-title">
       <div class="section-intro">
         <p class="section-index">The problem</p>
         <h2 id="problem-title">Predictive speed can strand a borrower without a human.</h2>
@@ -106,7 +112,7 @@
       </div>
     </section>
 
-    <section class="architecture-section" id="architecture" aria-labelledby="architecture-title">
+    <section class="architecture-section reveal" id="architecture" aria-labelledby="architecture-title">
       <div class="section-intro wide">
         <p class="section-index">How the intelligence works</p>
         <h2 id="architecture-title">Prediction proposes. Safety permits. PostgreSQL commits.</h2>
@@ -124,7 +130,7 @@
       <div class="fallback-line"><strong>Known uncertainty?</strong><span>Cold data</span><i></i><span>Stale presence</span><i></i><span>Rapid agent loss</span><i></i><span>Provider degradation</span><b>→ progressive mode</b></div>
     </section>
 
-    <section class="operations-section" id="operations" aria-labelledby="operations-title">
+    <section class="operations-section reveal" id="operations" aria-labelledby="operations-title">
       <div class="operations-heading">
         <div><p class="section-index">Running system evidence</p><h2 id="operations-title">The implementation, alive.</h2><p>These are current PostgreSQL records from the deployed application—not a marketing mockup.</p></div>
         <div class="sync-card"><i></i><span>Last database read</span><strong>{{ generated_at.strftime('%H:%M:%S') }} UTC</strong><button type="button" data-refresh-page>Refresh evidence</button></div>
@@ -158,15 +164,20 @@
         </article>
         <aside class="side-stack">
           <article class="panel compact-panel"><div class="panel-head"><div><p class="eyebrow">Mock telecom</p><h2>Provider health</h2></div></div>{% if providers %}<div class="provider-list">{% for provider in providers %}<div><span class="provider-mark">{{ provider.name[0] }}</span><p><strong>{{ provider.name }}</strong><small>{{ provider.attempts }} attempts · {{ provider.failure_rate }}% failed</small></p><span class="health {{ provider.state }}"><i></i>{{ provider.state_label }}</span></div>{% endfor %}</div>{% else %}<div class="panel-empty">Provider telemetry starts with the first campaign.</div>{% endif %}</article>
-          <article class="panel compact-panel"><div class="panel-head"><div><p class="eyebrow">Bounded failure path</p><h2>Incidents</h2></div><span class="count-badge">{{ incidents|length }}</span></div>{% if incidents %}<div class="incident-list">{% for incident in incidents %}<div><i></i><p><strong>{{ incident.kind }}</strong><small>Call {{ incident.call_id }} · {{ incident.status }}</small></p></div>{% endfor %}</div>{% else %}<div class="clear-state"><span>✓</span><p><strong>Quiet system</strong><small>No incidents require attention.</small></p></div>{% endif %}</article>
+          <article class="panel compact-panel"><div class="panel-head"><div><p class="eyebrow">Bounded failure path</p><h2>Incidents</h2></div><span class="count-badge">{{ incidents|length }}</span></div>{% if incidents %}<div class="incident-list">{% for incident in incidents %}<div><i></i><p><strong>{{ incident.kind }}</strong><small>Call {{ incident.call_id }} · {{ incident.status }}</small></p></div>{% endfor %}</div>{% else %}<div class="clear-state"><span aria-hidden="true">0</span><p><strong>Quiet system</strong><small>No incidents require attention.</small></p></div>{% endif %}</article>
         </aside>
       </div>
       <section class="campaign-strip"><div><p class="eyebrow">Operator-owned policy</p><h2>Campaign lanes</h2></div><div class="campaign-list">{% for campaign in campaigns %}<article><span class="lane"></span><div><strong>{{ campaign.name }}</strong><small>{{ campaign.language }} · {{ campaign.provider }}</small></div><span>{{ campaign.mode }}</span><code>{{ '%.2f'|format(campaign.risk_percent) }}% risk</code></article>{% endfor %}</div></section>
       {% endif %}
     </section>
 
-    <section class="submission-note"><div><p class="eyebrow">Submission boundary</p><h2>Built to be inspected, not merely presented.</h2></div><p>Python modular monolith · PostgreSQL concurrency · deterministic simulation · load tests · CI startup smoke test · REST + CLI · no real borrower calls.</p><a href="https://github.com/UtkarshDubeyGIT/dubey-smart-dialer">Review source <span>↗</span></a></section>
-    <footer><p>CredResolve SmartDialer <span>·</span> Graduate AI/ML systems assignment</p><p>Human agents <span>·</span> Explainable decisions <span>·</span> Mock telecom only</p></footer>
+    <section class="submission-note reveal">
+      <div><p class="eyebrow">Authorship and submission</p><h2>Built to be inspected, not merely presented.</h2></div>
+      <p>Python modular monolith · PostgreSQL concurrency · deterministic simulation · load tests · CI startup smoke test · REST + CLI · no real borrower calls.</p>
+      <div class="submission-author"><span class="author-monogram" aria-hidden="true">UD</span><p><small>Designed and engineered by</small><strong>Utkarsh Dubey</strong></p></div>
+      <div class="submission-links"><a href="https://github.com/UtkarshDubeyGIT/dubey-smart-dialer">Review source ↗</a><a href="mailto:utkarsh.dubey.ug23@nsut.ac.in">Email author</a></div>
+    </section>
+    <footer><p>CredResolve SmartDialer · Graduate AI/ML systems assignment</p><p>Designed and engineered by <a href="https://github.com/UtkarshDubeyGIT" rel="author">Utkarsh Dubey</a></p></footer>
   </main>
 </body>
 </html>
