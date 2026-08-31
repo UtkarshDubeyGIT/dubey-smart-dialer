@@ -80,7 +80,14 @@ class PlivoMockProvider(_IdempotentMockProvider):
         events = [self._event(handle, call_intent_id, CallState.RINGING, occurred_at, 1)]
         if answered:
             events.append(self._event(handle, call_intent_id, CallState.ANSWERED, occurred_at + timedelta(seconds=2), 2))
-        events.append(self._event(handle, call_intent_id, CallState.COMPLETED, occurred_at + timedelta(seconds=5), 3))
+        events.append(self._event(
+            handle,
+            call_intent_id,
+            CallState.COMPLETED,
+            occurred_at + timedelta(seconds=5),
+            3,
+            {"answered": answered},
+        ))
         return events
 
 

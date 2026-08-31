@@ -8,6 +8,7 @@ from smart_dialer.db.models import Agent, CallIntent, Campaign, SafetyDecision
 from smart_dialer.domain.pacing import PacingSnapshot, SafetyContext, SafetyReceipt
 from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.services.allocation import reserve_predictive_borrower, reserve_progressive_pair
+from smart_dialer.services.campaign_statistics import load_answer_history
 from smart_dialer.services.pacing import PredictivePacingEngine, ProgressivePacingEngine
 from smart_dialer.services.provider_health import provider_is_healthy
 from smart_dialer.services.safety import SafetyController
@@ -25,8 +26,8 @@ def run_pacing_tick(
     campaign_id: str,
     worker_id: str,
     now: datetime,
-    observed_answers: int = 0,
-    observed_attempts: int = 0,
+    observed_answers: int | None = None,
+    observed_attempts: int | None = None,
     provider_healthy: bool | None = None,
     agent_data_stale: bool = False,
     rapid_agent_drop: bool = False,
@@ -34,6 +35,17 @@ def run_pacing_tick(
     campaign = session.get(Campaign, campaign_id)
     if campaign is None:
         raise LookupError(campaign_id)
+    if (observed_answers is None) != (observed_attempts is None):
+        raise ValueError("answer history overrides require both answers and attempts")
+    if observed_answers is None:
+        history = load_answer_history(session, campaign_id=campaign_id)
+        observed_answers = history.observed_answers
+        observed_attempts = history.observed_attempts
+        inferred_answers = history.inferred_answers
+        statistics_source = "persisted_calls"
+    else:
+        inferred_answers = 0
+        statistics_source = "explicit_override"
     if provider_healthy is None:
         provider_healthy = provider_is_healthy(
             session, provider_name=campaign.provider_name
@@ -86,6 +98,8 @@ def run_pacing_tick(
             "ringing_calls": ringing,
             "observed_answers": observed_answers,
             "observed_attempts": observed_attempts,
+            "inferred_answers_excluded": inferred_answers,
+            "statistics_source": statistics_source,
             "provider_healthy": provider_healthy,
             "answer_rate_upper_bound": receipt.answer_rate_upper_bound,
         },

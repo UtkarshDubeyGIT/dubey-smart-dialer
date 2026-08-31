@@ -47,8 +47,6 @@ class BorrowerCreate(BaseModel):
 class PacingTickRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    observed_answers: int = 0
-    observed_attempts: int = 0
     agent_data_stale: bool = False
     rapid_agent_drop: bool = False
 

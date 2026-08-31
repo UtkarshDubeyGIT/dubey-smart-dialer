@@ -59,3 +59,16 @@ def test_pacing_api_rejects_caller_supplied_provider_health(client: TestClient) 
     )
 
     assert response.status_code == 422
+
+
+def test_pacing_api_rejects_caller_supplied_answer_statistics(client: TestClient) -> None:
+    campaign_id = client.post(
+        "/v1/campaigns", json={"name": "Database statistics", "mode": "predictive"}
+    ).json()["id"]
+
+    response = client.post(
+        f"/v1/campaigns/{campaign_id}/pacing-tick",
+        json={"observed_answers": 30, "observed_attempts": 100},
+    )
+
+    assert response.status_code == 422

@@ -8,6 +8,7 @@ from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.providers.base import NormalizedProviderEvent
 from smart_dialer.services.allocation import reserve_progressive_pair
 from smart_dialer.services.events import ingest_provider_event
+from smart_dialer.services.campaign_statistics import load_answer_history
 from smart_dialer.services.recovery import claim_next_intent, fail_poison_intent
 
 pytestmark = pytest.mark.integration
@@ -44,14 +45,20 @@ def create_intent(session_factory) -> str:
         return intent.id
 
 
-def event(intent_id: str, event_id: str, state: CallState, fingerprint: str | None = None):
+def event(
+    intent_id: str,
+    event_id: str,
+    state: CallState,
+    fingerprint: str | None = None,
+    payload: dict | None = None,
+):
     return NormalizedProviderEvent(
         provider_name="bland_mock",
         provider_event_id=event_id,
         call_intent_id=intent_id,
         target_state=state,
         occurred_at=datetime.now(UTC),
-        payload={},
+        payload=payload or {},
         semantic_fingerprint=fingerprint or event_id,
     )
 
@@ -111,7 +118,8 @@ def test_duplicate_provider_event_is_inserted_and_applied_once(session_factory) 
 def test_duplicate_semantic_fingerprint_is_deduplicated_even_with_new_id(session_factory) -> None:
     intent_id = create_intent(session_factory)
     with session_factory.begin() as session:
-        session.get(CallIntent, intent_id).state = CallState.INITIATED
+        intent = session.get(CallIntent, intent_id)
+        intent.state = CallState.INITIATED
     with session_factory.begin() as session:
         assert ingest_provider_event(session, event(intent_id, "evt-a", CallState.RINGING, "same")) == "applied"
     with session_factory.begin() as session:
@@ -156,3 +164,32 @@ def test_completed_call_releases_human_but_does_not_requeue_borrower(session_fac
         assert agent.available_since is not None
         assert borrower.state is BorrowerState.COMPLETED
         assert borrower.reservation_owner_id is None
+
+
+def test_explicit_no_answer_completion_contributes_an_observed_attempt(session_factory) -> None:
+    intent_id = create_intent(session_factory)
+    with session_factory.begin() as session:
+        intent = session.get(CallIntent, intent_id)
+        intent.state = CallState.INITIATED
+        intent.provider_call_id = "provider-no-answer-call"
+    with session_factory.begin() as session:
+        assert ingest_provider_event(
+            session, event(intent_id, "no-answer-ringing", CallState.RINGING)
+        ) == "applied"
+    with session_factory.begin() as session:
+        assert ingest_provider_event(
+            session,
+            event(
+                intent_id,
+                "no-answer-completed",
+                CallState.COMPLETED,
+                payload={"answered": False},
+            ),
+        ) == "applied"
+        intent = session.get(CallIntent, intent_id)
+        history = load_answer_history(session, campaign_id=intent.campaign_id)
+
+    assert intent.answer_observation == "not_answered"
+    assert history.observed_answers == 0
+    assert history.observed_attempts == 1
+    assert history.inferred_answers == 0

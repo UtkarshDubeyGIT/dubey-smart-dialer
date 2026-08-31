@@ -5,9 +5,17 @@ from pathlib import Path
 import typer
 from sqlalchemy import func, select
 
-from smart_dialer.db.models import Agent, Borrower, CallIntent, Campaign, SafetyDecision
+from smart_dialer.db.models import (
+    Agent,
+    Borrower,
+    BorrowerState,
+    CallIntent,
+    Campaign,
+    IntentMode,
+    SafetyDecision,
+)
 from smart_dialer.db.session import build_session_factory
-from smart_dialer.domain.states import AgentState
+from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.simulation import write_report
 from smart_dialer.services.coordinator import run_pacing_tick
 from smart_dialer.worker_loop import run_forever, run_once
@@ -59,9 +67,29 @@ def seed_demo() -> None:
                 campaign_id=campaign.id, external_id=f"DEMO-{index + 1}",
                 phone=f"+91980000{index:04d}", language="en-IN",
             ))
+        historical_borrower = Borrower(
+            campaign_id=campaign.id,
+            external_id="DEMO-HISTORY",
+            phone="+919800009999",
+            language="en-IN",
+            state=BorrowerState.COMPLETED,
+        )
+        session.add(historical_borrower)
+        session.flush()
+        for index in range(40):
+            session.add(CallIntent(
+                campaign_id=campaign.id,
+                borrower_id=historical_borrower.id,
+                mode=IntentMode.PREDICTIVE,
+                state=CallState.COMPLETED,
+                provider_name="bland_mock",
+                provider_idempotency_key=f"demo-history:{campaign.id}:{index}",
+                provider_call_id=f"demo-history-call:{campaign.id}:{index}",
+                answer_observation="observed" if index < 12 else "not_answered",
+            ))
+        session.flush()
         result = run_pacing_tick(
             session, campaign_id=campaign.id, worker_id="demo", now=now,
-            observed_answers=30, observed_attempts=100,
         )
         campaign_id = campaign.id
         approved = result.receipt.approved_calls
@@ -117,11 +145,11 @@ def borrower_create(campaign_id: str, external_id: str, phone: str, language: st
 
 
 @app.command("pacing-tick")
-def pacing_tick(campaign_id: str, answers: int = 0, attempts: int = 0) -> None:
+def pacing_tick(campaign_id: str) -> None:
     factory = build_session_factory()
     with factory.begin() as session:
         result = run_pacing_tick(session, campaign_id=campaign_id, worker_id="cli",
-                                 now=datetime.now(UTC), observed_answers=answers, observed_attempts=attempts)
+                                 now=datetime.now(UTC))
         emit({**result.receipt.__dict__, "created_intents": result.created_intents})
 
 

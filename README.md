@@ -31,7 +31,7 @@ In another terminal:
 make demo
 ```
 
-This seeds 10 human agents and 50 borrowers, runs a predictive decision through the production Safety Controller, and processes the approved mock calls. Inspect:
+This seeds 10 human agents, 50 queued borrowers, and a small auditable completed-call history; the production pacing path derives its own answer statistics, runs a predictive decision through the Safety Controller, and processes the approved mock calls. Inspect:
 
 ```bash
 curl -s http://localhost:8000/v1/safety-decisions | python3 -m json.tool
@@ -47,7 +47,7 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 60 unit + real PostgreSQL integration tests
+make test        # 66 unit + real PostgreSQL integration tests
 make simulate    # reports/simulation.json
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make verify      # tests, simulation, compilation, Compose validation
@@ -63,12 +63,15 @@ If Docker points to a stopped context, select a working one first (Docker Deskto
 - Progressive: atomically reserve one human agent and borrower per call.
 - Predictive: reserve borrower first; observed answer atomically claims a compatible human.
 - One-sided Wilson upper bound plus exact binomial overload tail.
+- Answer statistics derived automatically from the latest 200 completed provider calls;
+  REST and CLI callers cannot inject counts.
 - 0.5% default per-decision risk, 1% hard ceiling, 0% equals progressive.
 - Progressive fallback for cold start, stale presence, provider degradation, and rapid agent loss.
 - PostgreSQL `FOR UPDATE SKIP LOCKED`, with agent-before-borrower lock order.
 - Durable call intents, 30-second leases, three-attempt limit, manual review.
 - Unique event constraints and `INSERT ... ON CONFLICT DO NOTHING`.
-- Explicit transition jumps, terminal absorption, observed versus inferred answers.
+- Explicit transition jumps, terminal absorption, and separate observed-answer,
+  observed-no-answer, and inferred-answer buckets; inferred outcomes never feed pacing.
 - PostgreSQL-persisted provider circuit breaker consumed by both workers and pacing,
   with provider-local idempotency, reconciliation, health-check recovery, and jittered retries.
 - Fast/reliable Plivo mock and vendor-shaped flaky Bland mock.
@@ -116,7 +119,7 @@ uv run smart-dialer --help
 uv run smart-dialer campaign-create "Collections" --mode predictive
 uv run smart-dialer agent-create <campaign-id> "Agent One"
 uv run smart-dialer borrower-create <campaign-id> B-001 +919999999999
-uv run smart-dialer pacing-tick <campaign-id> --answers 30 --attempts 100
+uv run smart-dialer pacing-tick <campaign-id>
 uv run smart-dialer list-state
 uv run smart-dialer simulate
 ```

@@ -54,9 +54,10 @@ def ingest_provider_event(session: Session, event: NormalizedProviderEvent) -> s
         return "stale"
 
     intent.state = transition.current
-    if transition.answer_observation is not None:
+    answer_observation = _explicit_no_answer(event) or transition.answer_observation
+    if answer_observation is not None:
         if intent.answer_observation != "observed":
-            intent.answer_observation = transition.answer_observation
+            intent.answer_observation = answer_observation
     stored.processing_result = "applied"
     if intent.mode is IntentMode.PROGRESSIVE and intent.agent_id and intent.state is CallState.ANSWERED:
         agent = session.get(Agent, intent.agent_id)
@@ -88,3 +89,13 @@ def ingest_provider_event(session: Session, event: NormalizedProviderEvent) -> s
         release_owned_reservations(session, intent, borrower_state=borrower_state)
     session.flush()
     return "applied"
+
+
+def _explicit_no_answer(event: NormalizedProviderEvent) -> str | None:
+    if event.target_state is not CallState.COMPLETED:
+        return None
+    if event.payload.get("answered") is False:
+        return "not_answered"
+    if event.payload.get("disposition_tag") in {"NO_ANSWER", "BUSY", "VOICEMAIL"}:
+        return "not_answered"
+    return None

@@ -20,6 +20,7 @@ Pacing produces an expected-value proposal. The mandatory Safety Controller uses
 - Operators can choose any stricter value to 0%.
 - 0% produces pure progressive allocation and has unit plus PostgreSQL integration tests.
 - Cold start (under 30 attempts), stale presence, provider degradation, or rapid agent loss forces progressive.
+- Runtime pacing derives answer history from the latest 200 completed provider calls in PostgreSQL. API and CLI callers cannot inject answer counts. Direct no-answer dispositions count in the denominator; forward-jump inferred answers are reported separately and excluded from both numerator and denominator.
 
 The 0.5%/1% value is a **per-decision probability**, not cumulative campaign probability. At-least-one-overload probability compounds over repeated decisions. This is a known prototype simplification. Production needs a campaign-level risk budget that spends/replenishes exposure and tightens decisions after incidents.
 
