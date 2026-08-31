@@ -6,13 +6,22 @@
       "seed": 2026,
       "answer_rate": 0.2,
       "average_talk_seconds": 120,
-      "calls_proposed": 2920,
-      "calls_approved": 1660,
-      "calls_initiated": 1660,
-      "calls_connected": 325,
-      "observed_answer_rate": 0.1976,
-      "agent_utilization": 0.5417,
-      "overload_events": 1,
+      "calls_proposed": 967,
+      "calls_approved": 283,
+      "calls_initiated": 283,
+      "calls_connected": 43,
+      "observed_answer_rate": 0.1569,
+      "agent_utilization": 0.74,
+      "simulation_seconds": 300,
+      "peak_busy_agents": 20,
+      "minimum_available_agents": 0,
+      "average_available_agents": 5.2,
+      "agent_releases": 28,
+      "max_ringing_calls": 42,
+      "provider_failed_calls": 0,
+      "observed_average_setup_seconds": 1.0,
+      "observed_average_talk_seconds": 120.0,
+      "overload_events": 0,
       "progressive_fallbacks": 2,
       "safety_decisions": [
         {
@@ -23,297 +32,407 @@
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 20,
+          "busy_agents": 0,
+          "ringing_calls": 20,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 1,
           "proposed": 100,
-          "approved": 20,
+          "approved": 18,
           "mode": "progressive",
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 18,
+          "busy_agents": 2,
+          "ringing_calls": 18,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 2,
           "proposed": 100,
-          "approved": 58,
+          "approved": 42,
           "mode": "predictive",
-          "risk": 0.004138501588160537,
+          "risk": 0.004185517149066644,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 16,
+          "busy_agents": 4,
+          "ringing_calls": 42,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 3,
-          "proposed": 100,
-          "approved": 67,
+          "proposed": 98,
+          "approved": 30,
           "mode": "predictive",
-          "risk": 0.004236856508224343,
+          "risk": 0.00470909285864544,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 11,
+          "busy_agents": 9,
+          "ringing_calls": 30,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 4,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 74,
+          "approved": 21,
           "mode": "predictive",
-          "risk": 0.004323920138896386,
+          "risk": 0.004425632072143971,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 8,
+          "busy_agents": 12,
+          "ringing_calls": 21,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 5,
-          "proposed": 100,
-          "approved": 58,
+          "proposed": 24,
+          "approved": 4,
           "mode": "predictive",
-          "risk": 0.004630559451246743,
+          "risk": 0.001187884728326409,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 3,
+          "busy_agents": 17,
+          "ringing_calls": 4,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 6,
-          "proposed": 100,
-          "approved": 59,
+          "proposed": 24,
+          "approved": 5,
           "mode": "predictive",
-          "risk": 0.00487453353561916,
+          "risk": 0.004527107559472889,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 3,
+          "busy_agents": 17,
+          "ringing_calls": 5,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 7,
-          "proposed": 100,
-          "approved": 61,
+          "proposed": 25,
+          "approved": 5,
           "mode": "predictive",
-          "risk": 0.004329246719323138,
+          "risk": 0.003958132404085448,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 3,
+          "busy_agents": 17,
+          "ringing_calls": 5,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 8,
-          "proposed": 100,
-          "approved": 59,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.004646349213593532,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 9,
-          "proposed": 100,
-          "approved": 59,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0040172582174023705,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 10,
-          "proposed": 100,
-          "approved": 59,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.004037046018016783,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 11,
-          "proposed": 100,
-          "approved": 60,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0040349655533535094,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 12,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.004047297380419877,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 13,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 15,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.004364106293783463,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 14,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 30,
+          "approved": 7,
           "mode": "predictive",
-          "risk": 0.004639234951314053,
+          "risk": 0.003615008247099157,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 7,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 15,
-          "proposed": 100,
-          "approved": 55,
+          "proposed": 49,
+          "approved": 15,
           "mode": "predictive",
-          "risk": 0.004402605636417198,
+          "risk": 0.0036430751294655086,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 7,
+          "busy_agents": 13,
+          "ringing_calls": 15,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 16,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 39,
+          "approved": 12,
           "mode": "predictive",
-          "risk": 0.004165863365419316,
+          "risk": 0.004509240954897735,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 6,
+          "busy_agents": 14,
+          "ringing_calls": 12,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 17,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 59,
+          "approved": 21,
           "mode": "predictive",
-          "risk": 0.004358926732105648,
+          "risk": 0.004725710595571489,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 9,
+          "busy_agents": 11,
+          "ringing_calls": 21,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 18,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 56,
+          "approved": 19,
           "mode": "predictive",
-          "risk": 0.004530367263783843,
+          "risk": 0.004474283502492752,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 8,
+          "busy_agents": 12,
+          "ringing_calls": 19,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 19,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 27,
+          "approved": 7,
           "mode": "predictive",
-          "risk": 0.0047198028859637186,
+          "risk": 0.0039629318865818134,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 7,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 20,
-          "proposed": 100,
-          "approved": 58,
+          "proposed": 41,
+          "approved": 12,
           "mode": "predictive",
-          "risk": 0.00465369480327236,
+          "risk": 0.003060400752906046,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 6,
+          "busy_agents": 14,
+          "ringing_calls": 12,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 21,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 13,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.0042208649763531255,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 22,
-          "proposed": 100,
-          "approved": 58,
+          "proposed": 13,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.004273532068496107,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 23,
-          "proposed": 100,
-          "approved": 59,
+          "proposed": 13,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.004124140747148565,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 24,
-          "proposed": 100,
-          "approved": 59,
+          "proposed": 13,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.00406059837890384,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 25,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 14,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.004301781616506073,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 26,
-          "proposed": 100,
-          "approved": 57,
+          "proposed": 14,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.004047322664721732,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 27,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 27,
+          "approved": 7,
           "mode": "predictive",
-          "risk": 0.004322693639417549,
+          "risk": 0.0038303392466399492,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 7,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 28,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 47,
+          "approved": 15,
           "mode": "predictive",
-          "risk": 0.004938296877910857,
+          "risk": 0.0031059953629538305,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 7,
+          "busy_agents": 13,
+          "ringing_calls": 15,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 29,
-          "proposed": 100,
-          "approved": 56,
+          "proposed": 32,
+          "approved": 9,
           "mode": "predictive",
-          "risk": 0.004826989027077888,
+          "risk": 0.002781186443287162,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 5,
+          "busy_agents": 15,
+          "ringing_calls": 9,
+          "expected_releases_within_setup": 0
         }
       ]
     },
@@ -322,14 +441,23 @@
       "seed": 2027,
       "answer_rate": 0.5,
       "average_talk_seconds": 90,
-      "calls_proposed": 1183,
-      "calls_approved": 749,
-      "calls_initiated": 749,
-      "calls_connected": 388,
-      "observed_answer_rate": 0.518,
-      "agent_utilization": 0.6467,
+      "calls_proposed": 188,
+      "calls_approved": 110,
+      "calls_initiated": 110,
+      "calls_connected": 59,
+      "observed_answer_rate": 0.5413,
+      "agent_utilization": 0.8167,
+      "simulation_seconds": 300,
+      "peak_busy_agents": 20,
+      "minimum_available_agents": 0,
+      "average_available_agents": 3.67,
+      "agent_releases": 40,
+      "max_ringing_calls": 20,
+      "provider_failed_calls": 0,
+      "observed_average_setup_seconds": 1.0,
+      "observed_average_talk_seconds": 90.0,
       "overload_events": 0,
-      "progressive_fallbacks": 2,
+      "progressive_fallbacks": 3,
       "safety_decisions": [
         {
           "tick": 0,
@@ -339,297 +467,399 @@
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 20,
+          "busy_agents": 0,
+          "ringing_calls": 20,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 1,
-          "proposed": 34,
-          "approved": 20,
+          "proposed": 14,
+          "approved": 8,
           "mode": "progressive",
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 8,
+          "busy_agents": 12,
+          "ringing_calls": 8,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 2,
-          "proposed": 37,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.0018744122255540706,
+          "proposed": 4,
+          "approved": 2,
+          "mode": "progressive",
+          "risk": 0.0,
           "reasons": [
-            "confidence-bounded overload limit"
-          ]
+            "cold start"
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 3,
-          "proposed": 39,
-          "approved": 23,
+          "proposed": 4,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.0017257064184551143,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 4,
-          "proposed": 38,
-          "approved": 23,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0016526472249529718,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 5,
-          "proposed": 39,
-          "approved": 24,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.003141581844254233,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 6,
-          "proposed": 39,
-          "approved": 24,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.002315412720766911,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 7,
-          "proposed": 40,
-          "approved": 25,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.004351831453782054,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 8,
-          "proposed": 39,
-          "approved": 25,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.004696484710396043,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 9,
-          "proposed": 41,
-          "approved": 25,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.002462616175665208,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 10,
-          "proposed": 40,
-          "approved": 25,
+          "proposed": 20,
+          "approved": 12,
           "mode": "predictive",
-          "risk": 0.003548047081520046,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 12,
+          "busy_agents": 8,
+          "ringing_calls": 12,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 11,
-          "proposed": 40,
-          "approved": 25,
+          "proposed": 21,
+          "approved": 12,
           "mode": "predictive",
-          "risk": 0.0033699189629172047,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 12,
+          "busy_agents": 8,
+          "ringing_calls": 12,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 12,
-          "proposed": 40,
-          "approved": 25,
+          "proposed": 15,
+          "approved": 8,
           "mode": "predictive",
-          "risk": 0.00261314444980811,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 8,
+          "busy_agents": 12,
+          "ringing_calls": 8,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 13,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 10,
+          "approved": 5,
           "mode": "predictive",
-          "risk": 0.00397002745435986,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 5,
+          "busy_agents": 15,
+          "ringing_calls": 5,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 14,
-          "proposed": 42,
-          "approved": 26,
+          "proposed": 4,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.0026778961666537996,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 15,
-          "proposed": 43,
-          "approved": 27,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0047536167779378465,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 16,
-          "proposed": 42,
-          "approved": 26,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0025485902452687843,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 17,
-          "proposed": 42,
-          "approved": 26,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0027362222187606393,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 18,
-          "proposed": 42,
-          "approved": 26,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0029083537408993512,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 19,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0032718548314836313,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 20,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 11,
+          "approved": 6,
           "mode": "predictive",
-          "risk": 0.0032109976907672756,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 6,
+          "busy_agents": 14,
+          "ringing_calls": 6,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 21,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 18,
+          "approved": 9,
           "mode": "predictive",
-          "risk": 0.002975272731678889,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 9,
+          "busy_agents": 11,
+          "ringing_calls": 9,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 22,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 15,
+          "approved": 8,
           "mode": "predictive",
-          "risk": 0.0031026451595858127,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 8,
+          "busy_agents": 12,
+          "ringing_calls": 8,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 23,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 10,
+          "approved": 5,
           "mode": "predictive",
-          "risk": 0.003220682434110346,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 5,
+          "busy_agents": 15,
+          "ringing_calls": 5,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 24,
-          "proposed": 41,
-          "approved": 26,
+          "proposed": 8,
+          "approved": 4,
           "mode": "predictive",
-          "risk": 0.003330148673406228,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 4,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 25,
-          "proposed": 40,
-          "approved": 26,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.004152901538385371,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 26,
-          "proposed": 40,
-          "approved": 26,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.004045087016153129,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 27,
-          "proposed": 40,
-          "approved": 26,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0043057808710397,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 28,
-          "proposed": 39,
-          "approved": 26,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.004951449527320063,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 29,
-          "proposed": 40,
-          "approved": 26,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0046161990393103055,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         }
       ]
     },
@@ -638,14 +868,23 @@
       "seed": 2028,
       "answer_rate": 0.7,
       "average_talk_seconds": 180,
-      "calls_proposed": 889,
-      "calls_approved": 635,
-      "calls_initiated": 635,
-      "calls_connected": 449,
-      "observed_answer_rate": 0.7071,
-      "agent_utilization": 0.7483,
+      "calls_proposed": 89,
+      "calls_approved": 65,
+      "calls_initiated": 65,
+      "calls_connected": 39,
+      "observed_answer_rate": 0.6094,
+      "agent_utilization": 0.8917,
+      "simulation_seconds": 300,
+      "peak_busy_agents": 20,
+      "minimum_available_agents": 0,
+      "average_available_agents": 2.17,
+      "agent_releases": 20,
+      "max_ringing_calls": 20,
+      "provider_failed_calls": 0,
+      "observed_average_setup_seconds": 1.0,
+      "observed_average_talk_seconds": 180.0,
       "overload_events": 0,
-      "progressive_fallbacks": 2,
+      "progressive_fallbacks": 20,
       "safety_decisions": [
         {
           "tick": 0,
@@ -655,297 +894,417 @@
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 20,
+          "busy_agents": 0,
+          "ringing_calls": 20,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 1,
-          "proposed": 27,
-          "approved": 20,
+          "proposed": 7,
+          "approved": 5,
           "mode": "progressive",
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 5,
+          "busy_agents": 15,
+          "ringing_calls": 5,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 2,
-          "proposed": 27,
-          "approved": 20,
+          "proposed": 3,
+          "approved": 2,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 3,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 4,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 5,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 6,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 7,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 8,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 9,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 10,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 11,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 12,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 13,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 14,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 15,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 16,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 17,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 18,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 19,
+          "proposed": 21,
+          "approved": 15,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ],
+          "available_agents": 15,
+          "busy_agents": 5,
+          "ringing_calls": 15,
+          "expected_releases_within_setup": 0
+        },
+        {
+          "tick": 20,
+          "proposed": 15,
+          "approved": 10,
           "mode": "predictive",
           "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 3,
-          "proposed": 30,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0029440364862009833,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 4,
-          "proposed": 30,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.002137855677777265,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 5,
-          "proposed": 33,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.0033480350359614383,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 6,
-          "proposed": 33,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.0024613824161368106,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 7,
-          "proposed": 33,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.0023420665523927993,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 8,
-          "proposed": 33,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.002237709708166571,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 9,
-          "proposed": 32,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.0032709019629550413,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 10,
-          "proposed": 32,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.0034229382118990603,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 11,
-          "proposed": 31,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.004419669543879746,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 12,
-          "proposed": 31,
-          "approved": 22,
-          "mode": "predictive",
-          "risk": 0.004019987293907762,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 13,
-          "proposed": 30,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0009270833869844194,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 14,
-          "proposed": 30,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0010563588922873936,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 15,
-          "proposed": 30,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0011811106383228822,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 16,
-          "proposed": 30,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0013006976188524135,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 17,
-          "proposed": 29,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0014147902951455534,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 18,
-          "proposed": 29,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0013195797708913837,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 19,
-          "proposed": 29,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0015196909957196079,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
-        },
-        {
-          "tick": 20,
-          "proposed": 29,
-          "approved": 21,
-          "mode": "predictive",
-          "risk": 0.0016164105926208378,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 10,
+          "busy_agents": 10,
+          "ringing_calls": 10,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 21,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 6,
+          "approved": 4,
           "mode": "predictive",
-          "risk": 0.001420418650883545,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 4,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 22,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 3,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.0014195825098192727,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 23,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0013400169563258255,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 24,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0013413325397913915,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 25,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0012735049462748171,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 26,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0013422745273515635,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 27,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0014087825243307573,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 28,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0015432930880778116,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 29,
-          "proposed": 29,
-          "approved": 21,
+          "proposed": 2,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0015350878857914889,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         }
       ]
     },
@@ -954,13 +1313,22 @@
       "seed": 2029,
       "answer_rate": 0.2,
       "average_talk_seconds": 120,
-      "calls_proposed": 2102,
-      "calls_approved": 1139,
-      "calls_initiated": 1139,
-      "calls_connected": 392,
-      "observed_answer_rate": 0.3802,
-      "agent_utilization": 0.6533,
-      "overload_events": 8,
+      "calls_proposed": 630,
+      "calls_approved": 179,
+      "calls_initiated": 176,
+      "calls_connected": 39,
+      "observed_answer_rate": 0.24,
+      "agent_utilization": 0.8183,
+      "simulation_seconds": 300,
+      "peak_busy_agents": 20,
+      "minimum_available_agents": 0,
+      "average_available_agents": 3.63,
+      "agent_releases": 20,
+      "max_ringing_calls": 41,
+      "provider_failed_calls": 3,
+      "observed_average_setup_seconds": 3.0,
+      "observed_average_talk_seconds": 146.154,
+      "overload_events": 3,
       "progressive_fallbacks": 5,
       "safety_decisions": [
         {
@@ -971,297 +1339,401 @@
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 20,
+          "busy_agents": 0,
+          "ringing_calls": 20,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 1,
           "proposed": 100,
-          "approved": 20,
+          "approved": 17,
           "mode": "progressive",
           "risk": 0.0,
           "reasons": [
             "cold start"
-          ]
+          ],
+          "available_agents": 17,
+          "busy_agents": 3,
+          "ringing_calls": 17,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 2,
           "proposed": 100,
-          "approved": 46,
+          "approved": 41,
           "mode": "predictive",
-          "risk": 0.003949723134796301,
+          "risk": 0.004058188889742496,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 16,
+          "busy_agents": 4,
+          "ringing_calls": 41,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 3,
-          "proposed": 100,
-          "approved": 64,
+          "proposed": 78,
+          "approved": 24,
           "mode": "predictive",
-          "risk": 0.004459231725370818,
+          "risk": 0.004299630478859713,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 10,
+          "busy_agents": 10,
+          "ringing_calls": 24,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 4,
-          "proposed": 100,
-          "approved": 66,
+          "proposed": 84,
+          "approved": 24,
           "mode": "predictive",
-          "risk": 0.004156275064681724,
+          "risk": 0.003684757226339518,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 9,
+          "busy_agents": 11,
+          "ringing_calls": 24,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 5,
-          "proposed": 100,
-          "approved": 62,
+          "proposed": 32,
+          "approved": 7,
           "mode": "predictive",
-          "risk": 0.004617219598294616,
+          "risk": 0.003156491520513433,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 7,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 6,
-          "proposed": 100,
-          "approved": 54,
+          "proposed": 24,
+          "approved": 5,
           "mode": "predictive",
-          "risk": 0.004823577555295931,
+          "risk": 0.004783057676653893,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 3,
+          "busy_agents": 17,
+          "ringing_calls": 5,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 7,
-          "proposed": 97,
-          "approved": 49,
+          "proposed": 16,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.0040138080561594545,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 8,
-          "proposed": 95,
-          "approved": 49,
+          "proposed": 16,
+          "approved": 2,
           "mode": "predictive",
-          "risk": 0.00450947025604072,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 9,
-          "proposed": 97,
-          "approved": 50,
+          "proposed": 8,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.003950944852152179,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 10,
-          "proposed": 96,
-          "approved": 50,
+          "proposed": 8,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.003852583733660342,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 11,
-          "proposed": 85,
-          "approved": 46,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0049382792366135745,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 12,
-          "proposed": 73,
-          "approved": 41,
-          "mode": "predictive",
-          "risk": 0.004967406805035456,
+          "proposed": 0,
+          "approved": 0,
+          "mode": "progressive",
+          "risk": 0.0,
           "reasons": [
-            "confidence-bounded overload limit"
-          ]
+            "provider degradation"
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 13,
-          "proposed": 68,
-          "approved": 38,
-          "mode": "predictive",
-          "risk": 0.0037512640263973125,
+          "proposed": 22,
+          "approved": 3,
+          "mode": "progressive",
+          "risk": 0.0,
           "reasons": [
-            "confidence-bounded overload limit"
-          ]
+            "provider degradation"
+          ],
+          "available_agents": 3,
+          "busy_agents": 17,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 14,
-          "proposed": 64,
-          "approved": 37,
+          "proposed": 29,
+          "approved": 7,
           "mode": "predictive",
-          "risk": 0.004860885522420366,
+          "risk": 0.003962567105561054,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 4,
+          "busy_agents": 16,
+          "ringing_calls": 7,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 15,
-          "proposed": 60,
-          "approved": 35,
+          "proposed": 38,
+          "approved": 11,
           "mode": "predictive",
-          "risk": 0.0037935496242721863,
+          "risk": 0.0029599433179914978,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 6,
+          "busy_agents": 14,
+          "ringing_calls": 11,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 16,
-          "proposed": 57,
-          "approved": 20,
+          "proposed": 0,
+          "approved": 0,
           "mode": "progressive",
           "risk": 0.0,
           "reasons": [
             "provider degradation"
-          ]
+          ],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 17,
-          "proposed": 56,
-          "approved": 33,
+          "proposed": 26,
+          "approved": 8,
           "mode": "predictive",
-          "risk": 0.003388996937288341,
+          "risk": 0.004585976535304779,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 5,
+          "busy_agents": 15,
+          "ringing_calls": 8,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 18,
-          "proposed": 54,
-          "approved": 32,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0032241225713613327,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 19,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 5,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.004486441968703377,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 20,
-          "proposed": 51,
-          "approved": 31,
+          "proposed": 5,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.0037016819866131723,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 21,
-          "proposed": 52,
-          "approved": 20,
-          "mode": "progressive",
+          "proposed": 9,
+          "approved": 2,
+          "mode": "predictive",
           "risk": 0.0,
           "reasons": [
-            "provider degradation"
-          ]
+            "confidence-bounded overload limit"
+          ],
+          "available_agents": 2,
+          "busy_agents": 18,
+          "ringing_calls": 2,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 22,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 5,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.004316541153256878,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 23,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.004204560014473758,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 24,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0038115888338964713,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 25,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0037308905149685684,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 26,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0037844520536314034,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 27,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 0,
+          "approved": 0,
           "mode": "predictive",
-          "risk": 0.0035857009788009655,
-          "reasons": [
-            "confidence-bounded overload limit"
-          ]
+          "risk": 0.0,
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 28,
-          "proposed": 53,
-          "approved": 20,
-          "mode": "progressive",
+          "proposed": 0,
+          "approved": 0,
+          "mode": "predictive",
           "risk": 0.0,
-          "reasons": [
-            "provider degradation"
-          ]
+          "reasons": [],
+          "available_agents": 0,
+          "busy_agents": 20,
+          "ringing_calls": 0,
+          "expected_releases_within_setup": 0
         },
         {
           "tick": 29,
-          "proposed": 53,
-          "approved": 32,
+          "proposed": 5,
+          "approved": 1,
           "mode": "predictive",
-          "risk": 0.003771765283877896,
+          "risk": 0.0,
           "reasons": [
             "confidence-bounded overload limit"
-          ]
+          ],
+          "available_agents": 1,
+          "busy_agents": 19,
+          "ringing_calls": 1,
+          "expected_releases_within_setup": 0
         }
       ]
     }

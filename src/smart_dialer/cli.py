@@ -1,5 +1,5 @@
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import typer
@@ -12,6 +12,7 @@ from smart_dialer.db.models import (
     CallIntent,
     Campaign,
     IntentMode,
+    ProviderEvent,
     SafetyDecision,
 )
 from smart_dialer.db.session import build_session_factory
@@ -77,7 +78,7 @@ def seed_demo() -> None:
         session.add(historical_borrower)
         session.flush()
         for index in range(40):
-            session.add(CallIntent(
+            historical_intent = CallIntent(
                 campaign_id=campaign.id,
                 borrower_id=historical_borrower.id,
                 mode=IntentMode.PREDICTIVE,
@@ -86,7 +87,26 @@ def seed_demo() -> None:
                 provider_idempotency_key=f"demo-history:{campaign.id}:{index}",
                 provider_call_id=f"demo-history-call:{campaign.id}:{index}",
                 answer_observation="observed" if index < 12 else "not_answered",
-            ))
+            )
+            session.add(historical_intent)
+            session.flush()
+            if index < 12:
+                ringing_at = now - timedelta(seconds=70 + index)
+                for suffix, state, occurred_at in (
+                    ("ringing", CallState.RINGING, ringing_at),
+                    ("answered", CallState.ANSWERED, ringing_at + timedelta(seconds=4)),
+                    ("completed", CallState.COMPLETED, ringing_at + timedelta(seconds=64)),
+                ):
+                    session.add(ProviderEvent(
+                        call_intent_id=historical_intent.id,
+                        provider_name="bland_mock",
+                        provider_event_id=f"demo-history:{campaign.id}:{index}:{suffix}",
+                        semantic_fingerprint=f"demo-fingerprint:{campaign.id}:{index}:{suffix}",
+                        target_state=state,
+                        occurred_at=occurred_at,
+                        payload={"seeded_history": True},
+                        processing_result="applied",
+                    ))
         session.flush()
         result = run_pacing_tick(
             session, campaign_id=campaign.id, worker_id="demo", now=now,

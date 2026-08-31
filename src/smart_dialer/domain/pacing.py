@@ -14,6 +14,8 @@ class PacingSnapshot:
     observed_answers: int
     observed_attempts: int
     expected_releases_within_setup: int = 0
+    average_setup_seconds: float | None = None
+    average_talk_seconds: float | None = None
 
 
 @dataclass(frozen=True)

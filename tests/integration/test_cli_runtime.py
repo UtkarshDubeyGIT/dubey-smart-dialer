@@ -28,3 +28,5 @@ def test_seed_demo_uses_persisted_call_history_for_pacing(
         )
     assert decision.inputs["statistics_source"] == "persisted_calls"
     assert decision.inputs["observed_attempts"] >= 30
+    assert decision.inputs["average_setup_seconds"] == 4.0
+    assert decision.inputs["average_talk_seconds"] == 60.0

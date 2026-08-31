@@ -8,7 +8,7 @@ from smart_dialer.db.models import Agent, CallIntent, Campaign, SafetyDecision
 from smart_dialer.domain.pacing import PacingSnapshot, SafetyContext, SafetyReceipt
 from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.services.allocation import reserve_predictive_borrower, reserve_progressive_pair
-from smart_dialer.services.campaign_statistics import load_answer_history
+from smart_dialer.services.campaign_statistics import load_answer_history, load_timing_history
 from smart_dialer.services.pacing import PredictivePacingEngine, ProgressivePacingEngine
 from smart_dialer.services.provider_health import provider_is_healthy
 from smart_dialer.services.safety import SafetyController
@@ -63,11 +63,15 @@ def run_pacing_tick(
             CallIntent.state == CallState.RINGING,
         )
     ) or 0
+    timing = load_timing_history(session, campaign_id=campaign_id, now=now)
     snapshot = PacingSnapshot(
         available_agents=available_agents,
         ringing_calls=ringing,
         observed_answers=observed_answers,
         observed_attempts=observed_attempts,
+        expected_releases_within_setup=timing.expected_releases_within_setup,
+        average_setup_seconds=timing.average_setup_seconds,
+        average_talk_seconds=timing.average_talk_seconds,
     )
     engine = PredictivePacingEngine() if campaign.mode == "predictive" else ProgressivePacingEngine()
     proposal = engine.propose(snapshot)
@@ -96,6 +100,11 @@ def run_pacing_tick(
         inputs={
             "available_agents": available_agents,
             "ringing_calls": ringing,
+            "average_setup_seconds": timing.average_setup_seconds,
+            "average_talk_seconds": timing.average_talk_seconds,
+            "timing_setup_samples": timing.setup_samples,
+            "timing_talk_samples": timing.talk_samples,
+            "expected_releases_within_setup": timing.expected_releases_within_setup,
             "observed_answers": observed_answers,
             "observed_attempts": observed_attempts,
             "inferred_answers_excluded": inferred_answers,

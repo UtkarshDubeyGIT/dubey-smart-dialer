@@ -4,7 +4,7 @@
 flowchart TB
     API[FastAPI / CLI] --> Campaign
     Campaign --> Pacing[Pacing Engine]
-    DB -->|latest 200 observed call outcomes| Pacing
+    DB -->|latest 200 observed outcomes + event timings| Pacing
     Pacing -->|proposal only| Safety[Safety Controller]
     Safety -->|receipt| DB[(PostgreSQL)]
     Safety -->|approved count| Allocator

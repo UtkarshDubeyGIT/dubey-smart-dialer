@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from sqlalchemy import func, select
@@ -10,6 +10,7 @@ from smart_dialer.db.models import (
     CallIntent,
     Campaign,
     IntentMode,
+    ProviderEvent,
     SafetyDecision,
 )
 from smart_dialer.domain.states import AgentState, CallState
@@ -151,3 +152,85 @@ def test_inferred_answers_are_a_separate_non_statistical_bucket(session_factory)
     assert history.observed_answers == 10
     assert history.observed_attempts == 20
     assert getattr(history, "inferred_answers", None) == 10
+
+
+def test_pacing_derives_setup_talk_and_expected_release_from_provider_events(
+    session_factory,
+) -> None:
+    campaign_id = seed(
+        session_factory, mode="predictive", risk=0.005, agents=5, borrowers=2
+    )
+    now = datetime.now(UTC)
+    with session_factory.begin() as session:
+        borrowers = session.scalars(
+            select(Borrower)
+            .where(Borrower.campaign_id == campaign_id)
+            .order_by(Borrower.id)
+        ).all()
+        completed = CallIntent(
+            campaign_id=campaign_id,
+            borrower_id=borrowers[0].id,
+            mode=IntentMode.PREDICTIVE,
+            state=CallState.COMPLETED,
+            provider_name="plivo_mock",
+            provider_idempotency_key="timing-completed",
+            provider_call_id="timing-completed-call",
+            answer_observation="observed",
+        )
+        active = CallIntent(
+            campaign_id=campaign_id,
+            borrower_id=borrowers[1].id,
+            mode=IntentMode.PREDICTIVE,
+            state=CallState.CONNECTED,
+            provider_name="plivo_mock",
+            provider_idempotency_key="timing-active",
+            provider_call_id="timing-active-call",
+            answer_observation="observed",
+        )
+        session.add_all([completed, active])
+        session.flush()
+        connected_agent = session.scalar(
+            select(Agent)
+            .where(Agent.campaign_id == campaign_id)
+            .order_by(Agent.id)
+        )
+        connected_agent.state = AgentState.CONNECTED
+        active.agent_id = connected_agent.id
+
+        def add_event(intent_id: str, suffix: str, state: CallState, occurred_at: datetime) -> None:
+            session.add(ProviderEvent(
+                call_intent_id=intent_id,
+                provider_name="plivo_mock",
+                provider_event_id=f"{intent_id}:{suffix}",
+                semantic_fingerprint=f"fingerprint:{intent_id}:{suffix}",
+                target_state=state,
+                occurred_at=occurred_at,
+                payload={},
+                processing_result="applied",
+            ))
+
+        add_event(completed.id, "ringing", CallState.RINGING, now - timedelta(seconds=70))
+        add_event(completed.id, "answered", CallState.ANSWERED, now - timedelta(seconds=65))
+        add_event(completed.id, "completed", CallState.COMPLETED, now - timedelta(seconds=5))
+        add_event(active.id, "ringing", CallState.RINGING, now - timedelta(seconds=60))
+        add_event(active.id, "answered", CallState.ANSWERED, now - timedelta(seconds=55))
+        session.flush()
+
+        result = run_pacing_tick(
+            session,
+            campaign_id=campaign_id,
+            worker_id="timing-test",
+            now=now,
+            observed_answers=30,
+            observed_attempts=100,
+        )
+        decision = session.scalar(
+            select(SafetyDecision)
+            .where(SafetyDecision.campaign_id == campaign_id)
+            .order_by(SafetyDecision.created_at.desc())
+        )
+
+    assert decision.inputs.get("average_setup_seconds") == 5.0
+    assert decision.inputs.get("average_talk_seconds") == 60.0
+    assert decision.inputs.get("expected_releases_within_setup") == 1
+    assert "expected_releases=1" in result.receipt.explanation

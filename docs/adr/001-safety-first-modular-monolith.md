@@ -21,6 +21,7 @@ Pacing produces an expected-value proposal. The mandatory Safety Controller uses
 - 0% produces pure progressive allocation and has unit plus PostgreSQL integration tests.
 - Cold start (under 30 attempts), stale presence, provider degradation, or rapid agent loss forces progressive.
 - Runtime pacing derives answer history from the latest 200 completed provider calls in PostgreSQL. API and CLI callers cannot inject answer counts. Direct no-answer dispositions count in the denominator; forward-jump inferred answers are reported separately and excluded from both numerator and denominator.
+- Ring-to-answer and answer/connection-to-completion event timestamps provide bounded setup/talk averages. Connected human calls estimated to finish within setup time are exposed to the proposal as expected releases. The Safety Controller still calculates overload risk against currently available humans, so uncertain future releases can make the proposal more ambitious but cannot weaken the final capacity bound.
 
 The 0.5%/1% value is a **per-decision probability**, not cumulative campaign probability. At-least-one-overload probability compounds over repeated decisions. This is a known prototype simplification. Production needs a campaign-level risk budget that spends/replenishes exposure and tightens decisions after incidents.
 

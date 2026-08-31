@@ -47,7 +47,7 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 66 unit + real PostgreSQL integration tests
+make test        # 69 unit + real PostgreSQL integration tests
 make simulate    # reports/simulation.json
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make verify      # tests, simulation, compilation, Compose validation
@@ -75,7 +75,10 @@ If Docker points to a stopped context, select a working one first (Docker Deskto
 - PostgreSQL-persisted provider circuit breaker consumed by both workers and pacing,
   with provider-local idempotency, reconciliation, health-check recovery, and jittered retries.
 - Fast/reliable Plivo mock and vendor-shaped flaky Bland mock.
-- REST + CLI operations, simulator, load test, CI; intentionally no dashboard.
+- Provider-event-derived setup/talk averages and expected near-term human releases.
+- Virtual-time simulator with ringing latency, busy human agents, timed releases,
+  provider failures, and measured occupancy; no simulator-only pacing or safety formula.
+- REST + CLI operations, load test, CI; intentionally no dashboard.
 
 ## Architecture
 

@@ -41,6 +41,8 @@ class PredictivePacingEngine:
                 "predictive expected-value proposal: "
                 f"answer_rate={answer_rate:.4f}; available={available}; "
                 f"expected_releases={max(0, snapshot.expected_releases_within_setup)}; "
+                f"average_setup_seconds={snapshot.average_setup_seconds}; "
+                f"average_talk_seconds={snapshot.average_talk_seconds}; "
                 f"ringing={max(0, snapshot.ringing_calls)}; batch_cap={self.max_batch}"
             ),
         )
