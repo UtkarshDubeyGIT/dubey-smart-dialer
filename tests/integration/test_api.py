@@ -91,6 +91,7 @@ def test_dashboard_styles_are_packaged_with_the_application(
     assert ".identity-orb" in response.text
     assert "radial-gradient" in response.text
     assert "Live pacing curve" in dashboard.text
+    assert 'href="/static/dashboard.css"' in dashboard.text
 
 
 def test_public_demo_mode_keeps_dashboard_visible_but_blocks_mutations(
