@@ -13,7 +13,7 @@ No real borrower is called. `PlivoMockProvider` and `BlandMockProvider` make **z
 Prerequisite: Docker Desktop (or another working Docker Engine with Compose).
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/UtkarshDubeyGIT/dubey-smart-dialer.git
 cd dubey-smart-dialer
 docker compose up --build
 ```
