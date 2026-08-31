@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from smart_dialer.domain.pacing import PacingSnapshot, SafetyContext
-from smart_dialer.services.circuit_breaker import CircuitBreaker, CircuitState
 from smart_dialer.services.pacing import PredictivePacingEngine
 from smart_dialer.services.safety import SafetyController
 
@@ -175,39 +174,55 @@ def run_scenario(
     }
 
 
-def run_suite(*, seed: int = 2026) -> dict:
+def run_suite(*, seed: int = 2026, failure_scenarios: dict | None = None) -> dict:
     scenarios = [
         Scenario("A", 0.20, 120),
         Scenario("B", 0.50, 90),
         Scenario("C", 0.70, 180),
         Scenario("D-changing", 0.20, 120, provider_latency_seconds=3, provider_failure_rate=0.10, changing=True),
     ]
-    breaker = CircuitBreaker(seed=seed)
-    from datetime import UTC, datetime, timedelta
-    now = datetime(2026, 8, 31, tzinfo=UTC)
-    for offset in range(3):
-        breaker.record_attempt(succeeded=False, timed_out=True, now=now + timedelta(seconds=offset))
-    agent_drop_receipt = SafetyController().evaluate(
-        PredictivePacingEngine().propose(PacingSnapshot(60, 0, 50, 100)),
-        SafetyContext(60, 50, 100, rapid_agent_drop=True),
-    )
-    return {
+    report = {
         "seed": seed,
         "pacing_scenarios": [run_scenario(scenario, seed=seed + index) for index, scenario in enumerate(scenarios)],
-        "failure_scenarios": {
-            "worker_crash": {"lease_seconds": 30, "recovered": True, "duplicate_call": False},
-            "duplicate_events": {"events_received": 3, "state_transitions": 1, "database_dedup": True},
-            "out_of_order_events": {"terminal_absorbing": True, "late_event_result": "stale"},
-            "provider_outage": {"circuit_opened": breaker.state is CircuitState.OPEN, "new_calls_paused": True},
-            "agent_drop": {"agents_lost": 40, "heartbeat_bound_seconds": 15,
-                           "fallback": agent_drop_receipt.effective_mode},
-        },
     }
+    if failure_scenarios is not None:
+        report["failure_scenarios"] = failure_scenarios
+    return report
 
 
-def write_report(path: str | Path, *, seed: int = 2026) -> dict:
-    report = run_suite(seed=seed)
+def write_report(
+    path: str | Path,
+    *,
+    seed: int = 2026,
+    session_factory=None,
+) -> dict:
+    if session_factory is None:
+        failures = _run_failures_in_ephemeral_postgres(seed=seed)
+    else:
+        from smart_dialer.failure_simulation import run_failure_scenarios
+
+        failures = run_failure_scenarios(session_factory, seed=seed)
+    report = run_suite(seed=seed, failure_scenarios=failures)
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(report, indent=2) + "\n")
     return report
+
+
+def _run_failures_in_ephemeral_postgres(*, seed: int) -> dict:
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+    from testcontainers.community.postgres import PostgresContainer
+
+    from smart_dialer.db.base import Base
+    from smart_dialer.failure_simulation import run_failure_scenarios
+
+    with PostgresContainer("postgres:16-alpine", driver="psycopg") as postgres:
+        engine = create_engine(postgres.get_connection_url())
+        Base.metadata.create_all(engine)
+        factory = sessionmaker(bind=engine, expire_on_commit=False)
+        try:
+            return run_failure_scenarios(factory, seed=seed)
+        finally:
+            Base.metadata.drop_all(engine)
+            engine.dispose()

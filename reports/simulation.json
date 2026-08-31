@@ -1740,27 +1740,47 @@
   ],
   "failure_scenarios": {
     "worker_crash": {
-      "lease_seconds": 30,
-      "recovered": true,
+      "evidence_source": "executed_postgresql_production_path",
+      "crashed_attempt_outcome_before_rollback": "initiated",
+      "recovery_outcome": "reconciled",
+      "persisted_state": "initiated",
+      "processing_attempts_after_recovery": 1,
+      "provider_calls_created": 1,
       "duplicate_call": false
     },
     "duplicate_events": {
-      "events_received": 3,
-      "state_transitions": 1,
-      "database_dedup": true
+      "evidence_source": "executed_postgresql_production_path",
+      "provider_events_emitted": 4,
+      "provider_events_persisted": 3,
+      "applied_transitions": 1,
+      "duplicate_events_ignored": 1,
+      "stale_events": 2,
+      "final_state": "completed"
     },
     "out_of_order_events": {
-      "terminal_absorbing": true,
-      "late_event_result": "stale"
+      "evidence_source": "executed_postgresql_production_path",
+      "provider_events_emitted": 4,
+      "provider_events_persisted": 3,
+      "applied_transitions": 1,
+      "duplicate_events_ignored": 1,
+      "stale_events": 2,
+      "final_state": "completed"
     },
     "provider_outage": {
+      "evidence_source": "executed_postgresql_production_path",
       "circuit_opened": true,
-      "new_calls_paused": true
+      "deferred_state": "reserved",
+      "deferred_attempts_consumed": 0,
+      "health_probe_recovered": true
     },
     "agent_drop": {
+      "evidence_source": "executed_postgresql_production_path",
+      "agents_before": 100,
       "agents_lost": 40,
-      "heartbeat_bound_seconds": 15,
-      "fallback": "progressive"
+      "agents_released": 40,
+      "heartbeat_release_seconds": 15.0,
+      "fallback": "progressive",
+      "approved_progressive_calls": 60
     }
   }
 }

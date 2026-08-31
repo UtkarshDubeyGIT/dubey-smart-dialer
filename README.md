@@ -47,13 +47,13 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 69 unit + real PostgreSQL integration tests
-make simulate    # reports/simulation.json
+make test        # 71 unit + real PostgreSQL integration tests
+make simulate    # pacing + PostgreSQL-executed failure evidence
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make verify      # tests, simulation, compilation, Compose validation
 ```
 
-`make test` and `make load-test` use Testcontainers and ephemeral PostgreSQL 16. Docker must be running; no shared test database is needed. Race tests use separate connections released on a shared barrier, not sequential awaits.
+`make test`, `make simulate`, and `make load-test` use Testcontainers and ephemeral PostgreSQL 16. Docker must be running; no shared test database is needed. Race tests use separate connections released on a shared barrier, not sequential awaits. Failure simulation executes the real allocation, lease recovery, event inbox, circuit, worker, and presence services; it does not print declared outcomes.
 
 If Docker points to a stopped context, select a working one first (Docker Desktop on macOS is commonly `docker context use desktop-linux`).
 

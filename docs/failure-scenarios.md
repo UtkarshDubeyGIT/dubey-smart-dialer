@@ -1,5 +1,7 @@
 # Failure scenarios
 
+`make simulate` executes these stories against ephemeral PostgreSQL using the production services. Each generated report entry is marked `executed_postgresql_production_path`; seeded reports exclude random row IDs so repeated runs are byte-stable.
+
 ## Worker crash
 
 - Before allocation commit: PostgreSQL rolls back agent, borrower, and intent; zero reservation remains.

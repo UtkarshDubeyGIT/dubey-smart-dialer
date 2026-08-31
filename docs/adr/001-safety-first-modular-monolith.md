@@ -49,6 +49,10 @@ Provider circuit state is durable PostgreSQL state shared by API and worker proc
 
 The event inbox is append-only. Unique constraints and `INSERT ... ON CONFLICT DO NOTHING` deduplicate ID/fingerprint races. Event insertion, transition, human allocation/release, and incidents share one transaction. Explicit transitions replace ordinal comparisons. Terminal states absorb later events. Skipped `ANSWERED` is inferred and excluded from observed answer statistics.
 
+### Executable failure evidence
+
+The report generator starts ephemeral PostgreSQL and executes worker rollback/recovery, provider idempotency reconciliation, duplicate and out-of-order inbox ingestion, persisted circuit open/defer/health-probe recovery, and the 40-agent heartbeat drop through production services. Reported outcomes are measured from committed rows and service results, not declared booleans. Random database identifiers are omitted to keep the seeded report reproducible.
+
 ### Human presence
 
 Workstations heartbeat every 5 seconds. Graceful pause/offline is immediate; silent disappearance is detected at 15 seconds. Ringing cancellation holds ownership for a 10-second reconciliation lease, then force-releases. Call-intent reconciliation precedes heartbeat release, preventing double-release paths.

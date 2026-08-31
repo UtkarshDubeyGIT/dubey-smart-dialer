@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from testcontainers.community.postgres import PostgresContainer
 
+from smart_dialer.db import models  # noqa: F401
 from smart_dialer.db.base import Base
 
 
