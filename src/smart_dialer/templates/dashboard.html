@@ -3,37 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8fafc">
+  <meta name="theme-color" content="#fffdfb">
+  <meta name="description" content="A safety-first predictive dialer control room for human collections teams.">
   <meta http-equiv="refresh" content="15">
   <title>SmartDialer Control Room · CredResolve</title>
   <link rel="stylesheet" href="{{ url_for('static', path='/dashboard.css') }}">
 </head>
 <body>
+  <a class="skip-link" href="#dashboard-content">Skip to dashboard</a>
   <div class="ambient-grid" aria-hidden="true"></div>
-  <main class="shell">
+  <main class="shell" id="dashboard-content">
     <header class="topbar">
       <a class="brand" href="/dashboard" aria-label="CredResolve SmartDialer dashboard">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
         <span class="brand-copy">
           <strong>CredResolve</strong>
-          <small>SmartDialer control room</small>
+          <small>Dialer operations</small>
         </span>
       </a>
       <div class="topbar-actions">
         <span class="live-status"><i></i> System telemetry live</span>
-        <a class="quiet-link" href="/docs">API docs <span>↗</span></a>
+        <a class="quiet-link" href="/docs">Open API docs <span>↗</span></a>
       </div>
     </header>
 
     <section class="intro" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">Human-led collections · Live telemetry</p>
-        <h1 id="page-title">Capacity moves.<br><span>Safety moves first.</span></h1>
+      <div class="intro-copy">
+        <p class="identity-pill"><span>Human-led</span> collections infrastructure</p>
+        <h1 id="page-title">Every call.<br><span>One safety curve.</span></h1>
+        <p class="intro-description">Live capacity, explainable pacing, and durable call evidence—built around human agents.</p>
+        <div class="intro-signals" aria-label="Prototype boundaries">
+          <span><i class="signal-green"></i>PostgreSQL source of truth</span>
+          <span><i class="signal-orange"></i>Mock telecom only</span>
+        </div>
       </div>
-      <div class="intro-note">
-        <span>Last synchronized</span>
-        <strong>{{ generated_at.strftime('%H:%M:%S') }} UTC</strong>
-        <small>Refreshes every 15 seconds</small>
+      <div class="identity-stage" aria-hidden="true">
+        <div class="identity-orb"><i></i><i></i><i></i></div>
+        <span class="floating-signal signal-a"><i></i>Live pacing curve</span>
+        <span class="floating-signal signal-b"><i></i>Human capacity</span>
+        <span class="floating-signal signal-c"><i></i>Receipt linked</span>
+        <div class="intro-note">
+          <span>Last synchronized</span>
+          <strong>{{ generated_at.strftime('%H:%M:%S') }} UTC</strong>
+          <small>Refreshes every 15 seconds</small>
+        </div>
       </div>
     </section>
 
@@ -53,7 +66,7 @@
     </section>
     {% else %}
     <section class="metric-rail" aria-label="System summary">
-      <article class="metric violet">
+      <article class="metric accent">
         <span>Campaigns</span>
         <strong>{{ metrics.campaigns }}</strong>
         <small>{{ campaigns[0].mode }} pacing active</small>
@@ -77,9 +90,9 @@
 
     <section class="primary-grid">
       <article class="panel safety-panel">
-        <div class="panel-head inverse">
+        <div class="panel-head">
           <div>
-            <p class="eyebrow">Authorization boundary</p>
+            <p class="eyebrow">Live pacing curve</p>
             <h2>Safety pulse</h2>
           </div>
           {% if safety %}<span class="receipt-id">Receipt {{ safety.id }}</span>{% endif %}
@@ -107,7 +120,7 @@
           <p>{% if safety.reasons %}{{ safety.reasons|join(' · ') }}{% else %}Within confidence-bounded capacity{% endif %}</p>
         </div>
         {% else %}
-        <div class="panel-empty inverse-empty">Run a pacing tick to generate the first immutable authorization receipt.</div>
+        <div class="panel-empty">Run a pacing tick to generate the first immutable authorization receipt.</div>
         {% endif %}
       </article>
 

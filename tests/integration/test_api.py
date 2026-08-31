@@ -84,10 +84,13 @@ def test_dashboard_styles_are_packaged_with_the_application(
     client: TestClient,
 ) -> None:
     response = client.get("/static/dashboard.css")
+    dashboard = client.get("/dashboard")
 
     assert response.status_code == 200
-    assert "--violet: #7e22ce" in response.text
+    assert "--orange: #ff641e" in response.text
+    assert ".identity-orb" in response.text
     assert "radial-gradient" in response.text
+    assert "Live pacing curve" in dashboard.text
 
 
 def test_public_demo_mode_keeps_dashboard_visible_but_blocks_mutations(
