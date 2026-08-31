@@ -6,7 +6,7 @@ A graduate-level **AI/ML systems assignment** and safety-first functional protot
 
 No real borrower is called. `PlivoMockProvider` and `BlandMockProvider` make **zero network requests**.
 
-Designed and engineered by **Utkarsh Dubey** · [GitHub](https://github.com/UtkarshDubeyGIT) · [Email](mailto:utkarsh.dubey.ug23@nsut.ac.in) · [View the live frontend](https://dialer-dashboard.dubey.page/dashboard)
+Built by **Utkarsh Dubey** · [GitHub](https://github.com/UtkarshDubeyGIT) · [Email](mailto:utkarsh.dubey.ug23@nsut.ac.in) · [View the live frontend](https://dialer-dashboard.dubey.page/dashboard)
 
 [![CredResolve SmartDialer live decision dashboard](docs/dashboard-preview.jpg)](https://dialer-dashboard.dubey.page/dashboard)
 
@@ -58,7 +58,7 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 **Public frontend:** <https://dialer-dashboard.dubey.page/dashboard>
 
-The root URL opens a responsive, read-only product walkthrough designed and implemented by **Utkarsh Dubey**. Its interactive **Decision Lab** lets a reviewer change human capacity, observed answer rate, risk tolerance, and failure scenarios, then watch the production `PredictivePacingEngine` and `SafetyController` approve, reduce, or force progressive mode. `GET /v1/demo/pacing-decision` is side-effect-free and uses the real production decision classes—no call intents are created and no frontend-only safety formula exists.
+The root URL opens a responsive, read-only product walkthrough built by **Utkarsh Dubey**. Its interactive **Decision Lab** lets a reviewer change human capacity, observed answer rate, risk tolerance, and failure scenarios, then watch the production `PredictivePacingEngine` and `SafetyController` approve, reduce, or force progressive mode. `GET /v1/demo/pacing-decision` is side-effect-free and uses the real production decision classes—no call intents are created and no frontend-only safety formula exists.
 
 The same page explains the graduate AI/ML problem, Wilson confidence bound, exact binomial-tail policy, schema-enforced safety receipt, and progressive fallbacks before showing live PostgreSQL evidence: campaign policy, heartbeat-qualified human capacity, recent call intents, provider health, incidents, and the exact receipt authorizing each batch. There is no frontend build step.
 

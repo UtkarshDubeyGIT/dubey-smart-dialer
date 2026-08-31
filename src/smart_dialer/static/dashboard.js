@@ -153,15 +153,6 @@
   });
   document.querySelector("[data-refresh-page]")?.addEventListener("click", () => window.location.reload());
 
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("is-visible");
-      revealObserver.unobserve(entry.target);
-    });
-  }, { threshold: 0.08 });
-  document.querySelectorAll(".reveal").forEach((section) => revealObserver.observe(section));
-
   syncControlLabels();
   evaluate();
 })();
