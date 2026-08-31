@@ -37,6 +37,7 @@ This seeds 10 human agents and 50 borrowers, runs a predictive decision through 
 curl -s http://localhost:8000/v1/safety-decisions | python3 -m json.tool
 curl -s http://localhost:8000/v1/call-intents | python3 -m json.tool
 curl -s http://localhost:8000/v1/provider-events | python3 -m json.tool
+curl -s http://localhost:8000/v1/provider-health | python3 -m json.tool
 curl -s http://localhost:8000/v1/incidents | python3 -m json.tool
 ```
 
@@ -46,7 +47,7 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 54 unit + real PostgreSQL integration tests
+make test        # 60 unit + real PostgreSQL integration tests
 make simulate    # reports/simulation.json
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make verify      # tests, simulation, compilation, Compose validation
@@ -68,7 +69,8 @@ If Docker points to a stopped context, select a working one first (Docker Deskto
 - Durable call intents, 30-second leases, three-attempt limit, manual review.
 - Unique event constraints and `INSERT ... ON CONFLICT DO NOTHING`.
 - Explicit transition jumps, terminal absorption, observed versus inferred answers.
-- Provider circuit breaker, provider-local idempotency, reconciliation, jittered retries.
+- PostgreSQL-persisted provider circuit breaker consumed by both workers and pacing,
+  with provider-local idempotency, reconciliation, health-check recovery, and jittered retries.
 - Fast/reliable Plivo mock and vendor-shaped flaky Bland mock.
 - REST + CLI operations, simulator, load test, CI; intentionally no dashboard.
 
@@ -104,6 +106,7 @@ POST /v1/campaigns/{id}/pacing-tick
 GET  /v1/safety-decisions
 GET  /v1/call-intents
 GET  /v1/provider-events
+GET  /v1/provider-health
 GET  /v1/incidents
 GET  /v1/manual-review
 ```

@@ -3,12 +3,13 @@ from datetime import UTC, datetime
 from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from smart_dialer.db.models import (
-    Agent, Borrower, CallIntent, Campaign, Incident, ProviderEvent, SafetyDecision,
+    Agent, Borrower, CallIntent, Campaign, Incident, ProviderEvent, ProviderHealth,
+    SafetyDecision,
 )
 from smart_dialer.db.session import build_session_factory
 from smart_dialer.domain.states import AgentState, CallState
@@ -44,9 +45,10 @@ class BorrowerCreate(BaseModel):
 
 
 class PacingTickRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     observed_answers: int = 0
     observed_attempts: int = 0
-    provider_healthy: bool = True
     agent_data_stale: bool = False
     rapid_agent_drop: bool = False
 
@@ -161,6 +163,13 @@ def create_app(*, session_factory: sessionmaker[Session] | None = None) -> FastA
                  "target_state": r.target_state, "processing_result": r.processing_result}
                 for r in db.scalars(select(ProviderEvent).order_by(ProviderEvent.received_at))]
 
+    @app.get("/v1/provider-health")
+    def list_provider_health(db: Db) -> list[dict]:
+        return [
+            _provider_health(row)
+            for row in db.scalars(select(ProviderHealth).order_by(ProviderHealth.provider_name))
+        ]
+
     @app.get("/v1/safety-decisions")
     def list_safety(db: Db) -> list[dict]:
         return [{"id": r.id, "campaign_id": r.campaign_id, "requested_calls": r.requested_calls,
@@ -205,6 +214,21 @@ def _intent(r: CallIntent) -> dict:
 def _incident(r: Incident) -> dict:
     return {"id": r.id, "call_intent_id": r.call_intent_id, "kind": r.kind,
             "detail": r.detail, "status": r.status, "created_at": r.created_at}
+
+
+def _provider_health(r: ProviderHealth) -> dict:
+    attempts = len(r.recent_outcomes)
+    failures = attempts - sum(r.recent_outcomes)
+    return {
+        "provider_name": r.provider_name,
+        "state": r.state,
+        "recent_attempts": attempts,
+        "recent_failure_rate": failures / attempts if attempts else 0.0,
+        "consecutive_timeouts": r.consecutive_timeouts,
+        "opened_at": r.opened_at,
+        "last_probe_at": r.last_probe_at,
+        "updated_at": r.updated_at,
+    }
 
 
 app = create_app()

@@ -146,6 +146,18 @@ class ProviderEvent(Base):
     )
 
 
+class ProviderHealth(Base):
+    __tablename__ = "provider_health"
+
+    provider_name: Mapped[str] = mapped_column(String(40), primary_key=True)
+    state: Mapped[str] = mapped_column(String(20), nullable=False, default="closed")
+    recent_outcomes: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    consecutive_timeouts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_probe_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
+
+
 class SafetyDecision(Base):
     __tablename__ = "safety_decisions"
 

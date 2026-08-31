@@ -41,6 +41,8 @@ Workers claim intents with `SKIP LOCKED` and a 30-second lease. Lease expiry can
 
 Failover happens only after the original provider conclusively reports no call for its key. Keys are never portable across providers. Inconclusive reconciliation becomes terminal `AMBIGUOUS`; no second borrower call is risked.
 
+Provider circuit state is durable PostgreSQL state shared by API and worker processes. Worker outcomes open the circuit after three consecutive timeouts or a 30% failure rate in a 20-attempt window with a 10-attempt minimum. Pacing reads that state automatically and falls back to progressive; the local API cannot override it. Open circuits defer claimed intents without spending an attempt. After 30 seconds, a row-locked half-open health/status probe either closes the circuit before initiation or renews the open cooldown.
+
 ### Event consistency
 
 The event inbox is append-only. Unique constraints and `INSERT ... ON CONFLICT DO NOTHING` deduplicate ID/fingerprint races. Event insertion, transition, human allocation/release, and incidents share one transaction. Explicit transitions replace ordinal comparisons. Terminal states absorb later events. Skipped `ANSWERED` is inferred and excluded from observed answer statistics.

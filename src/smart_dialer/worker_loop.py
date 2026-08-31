@@ -1,5 +1,5 @@
 import time
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
@@ -11,6 +11,7 @@ from smart_dialer.providers.mocks import BlandMockProvider, PlivoMockProvider
 from smart_dialer.providers.registry import get_alternate, get_provider
 from smart_dialer.services.events import ingest_provider_event
 from smart_dialer.services.presence import reap_silent_agents, reconcile_cancelled_leases
+from smart_dialer.services.provider_health import provider_allows_initiation, record_provider_attempt
 from smart_dialer.services.recovery import claim_next_intent
 from smart_dialer.services.worker import initiate_intent_with_reconciliation
 
@@ -24,11 +25,35 @@ def run_once(factory: sessionmaker[Session]) -> bool:
             reconcile_cancelled_leases(session, now=now)
             return False
         borrower = session.get(Borrower, intent.borrower_id)
+        original_provider_name = intent.provider_name
         provider = get_provider(intent.provider_name)
+        if not provider_allows_initiation(
+            session, provider=provider, now=now
+        ):
+            intent.processing_attempts = max(0, intent.processing_attempts - 1)
+            intent.lease_owner = None
+            intent.lease_expires_at = now + timedelta(seconds=30)
+            return True
         alternate = get_alternate(intent.provider_name)
         outcome = initiate_intent_with_reconciliation(
             intent, phone=borrower.phone, provider=provider, alternate=alternate
         )
+        original_succeeded = outcome in {"initiated", "reconciled"}
+        record_provider_attempt(
+            session,
+            provider_name=original_provider_name,
+            succeeded=original_succeeded,
+            timed_out=not original_succeeded,
+            now=now,
+        )
+        if outcome == "failed-over":
+            record_provider_attempt(
+                session,
+                provider_name=intent.provider_name,
+                succeeded=True,
+                timed_out=False,
+                now=now,
+            )
         if outcome == "ambiguous":
             session.add(Incident(
                 call_intent_id=intent.id, kind="ambiguous_provider_result",

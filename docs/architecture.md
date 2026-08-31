@@ -10,6 +10,9 @@ flowchart TB
     Allocator -->|agent then borrower locks| DB
     DB --> Intent[Durable Call Intent]
     Intent -->|SKIP LOCKED + 30s lease| Worker
+    Worker -->|attempt outcome| Health[Persisted Provider Circuit]
+    Health -->|open means progressive fallback| Safety
+    Health -->|gate + half-open health probe| Worker
     Worker --> Reconcile[Provider idempotency reconciliation]
     Reconcile --> Plivo[Plivo Mock - fast/reliable]
     Reconcile --> Bland[Bland Mock - slow/flaky]

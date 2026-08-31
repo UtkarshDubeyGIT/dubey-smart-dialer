@@ -46,3 +46,16 @@ def test_agent_graceful_state_and_operational_lists(client: TestClient) -> None:
     assert response.json()["state"] == "paused"
     assert client.get("/v1/incidents").status_code == 200
     assert client.get("/v1/manual-review").status_code == 200
+
+
+def test_pacing_api_rejects_caller_supplied_provider_health(client: TestClient) -> None:
+    campaign_id = client.post(
+        "/v1/campaigns", json={"name": "Runtime health", "mode": "predictive"}
+    ).json()["id"]
+
+    response = client.post(
+        f"/v1/campaigns/{campaign_id}/pacing-tick",
+        json={"provider_healthy": False},
+    )
+
+    assert response.status_code == 422

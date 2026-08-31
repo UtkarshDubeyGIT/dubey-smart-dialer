@@ -13,10 +13,12 @@ The lease is a liveness bound. Provider idempotency is the correctness guarantee
 ## Provider outage
 
 - Three consecutive initiation timeouts, or at least 30% failures in the latest 20 attempts after a minimum sample of 10, opens the circuit for 30 seconds.
+- Worker outcomes update a PostgreSQL provider-health row in the same transaction as intent processing; API and worker processes therefore share the same circuit state.
 - Existing calls remain tracked; an initiation outage does not mean live calls ended.
-- Any degradation forces predictive mode to progressive.
-- No new call uses an open provider; if no healthy provider exists, dialing pauses.
-- Half-open testing uses health/status, never a borrower call.
+- Pacing reads the campaign provider's persisted circuit automatically; callers cannot supply a health override. Any degradation forces predictive mode to progressive.
+- An intent claimed while its circuit is open is deferred without consuming a processing attempt or invoking an alternate provider.
+- After 30 seconds one lock-owning worker runs a provider health/status probe. A successful probe closes the circuit before the waiting borrower call proceeds; a failed probe reopens the cooldown. No borrower is called merely as a probe.
+- Circuit state and recent failure rate are visible at `GET /v1/provider-health`.
 - Before failover, the original provider is queried with its own key. Confirmed absence permits an alternate with a new provider-specific key. Inconclusive reconciliation becomes `AMBIGUOUS` and manual review.
 - Retry delay is bounded exponential backoff with jitter.
 

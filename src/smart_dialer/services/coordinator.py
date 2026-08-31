@@ -9,6 +9,7 @@ from smart_dialer.domain.pacing import PacingSnapshot, SafetyContext, SafetyRece
 from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.services.allocation import reserve_predictive_borrower, reserve_progressive_pair
 from smart_dialer.services.pacing import PredictivePacingEngine, ProgressivePacingEngine
+from smart_dialer.services.provider_health import provider_is_healthy
 from smart_dialer.services.safety import SafetyController
 
 
@@ -26,13 +27,17 @@ def run_pacing_tick(
     now: datetime,
     observed_answers: int = 0,
     observed_attempts: int = 0,
-    provider_healthy: bool = True,
+    provider_healthy: bool | None = None,
     agent_data_stale: bool = False,
     rapid_agent_drop: bool = False,
 ) -> PacingTickResult:
     campaign = session.get(Campaign, campaign_id)
     if campaign is None:
         raise LookupError(campaign_id)
+    if provider_healthy is None:
+        provider_healthy = provider_is_healthy(
+            session, provider_name=campaign.provider_name
+        )
     available_agents = session.scalar(
         select(func.count(Agent.id)).where(
             Agent.campaign_id == campaign_id,
@@ -81,6 +86,7 @@ def run_pacing_tick(
             "ringing_calls": ringing,
             "observed_answers": observed_answers,
             "observed_attempts": observed_attempts,
+            "provider_healthy": provider_healthy,
             "answer_rate_upper_bound": receipt.answer_rate_upper_bound,
         },
         reasons=list(receipt.reasons),
