@@ -9,7 +9,7 @@ The prototype must demonstrate progressive and predictive dialing for human coll
 
 ## Decision
 
-Use Python 3.12, FastAPI, SQLAlchemy, PostgreSQL 16, Alembic, a database worker, two deterministic provider simulators, pytest/Testcontainers, and Docker Compose. PostgreSQL is the sole source of truth. No Redis, Celery, Kafka, dashboard, authentication, or real telecom integration is required for this prototype.
+Use Python 3.12, FastAPI, SQLAlchemy, PostgreSQL 16, Alembic, a database worker, two deterministic provider simulators, pytest/Testcontainers, and Docker Compose. PostgreSQL is the sole source of truth. No Redis, Celery, Kafka, authentication, or real telecom integration is required for this prototype. A read-only, server-rendered reviewer dashboard was added later as a thin presentation layer over the same operational data; it does not introduce a second application runtime or control path.
 
 ### Predictive policy
 

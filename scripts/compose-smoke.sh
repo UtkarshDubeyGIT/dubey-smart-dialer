@@ -31,6 +31,14 @@ curl --fail --silent --show-error \
     "http://127.0.0.1:${SMART_DIALER_API_PORT}/health"
 printf '\n'
 
+printf '%s\n' "[INFO] Checking the reviewer dashboard..."
+dashboard_page="$(curl --fail --silent --show-error \
+    "http://127.0.0.1:${SMART_DIALER_API_PORT}/dashboard")"
+if ! printf '%s' "$dashboard_page" | grep -q "SmartDialer Control Room"; then
+    printf '%s\n' "[ERROR] Dashboard did not return the expected control-room page."
+    exit 1
+fi
+
 printf '%s\n' "[INFO] Running one end-to-end pacing and worker demo..."
 compose exec -T api smart-dialer seed-demo
 
@@ -42,4 +50,4 @@ if ! compose ps --status running --services | grep -qx "worker"; then
     exit 1
 fi
 
-printf '%s\n' "[OK] Compose smoke test passed: database, migrations, API, CLI, and worker are healthy."
+printf '%s\n' "[OK] Compose smoke test passed: database, migrations, API, dashboard, CLI, and worker are healthy."

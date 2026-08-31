@@ -20,6 +20,7 @@ docker compose up --build
 
 Wait until Compose reports `api` healthy, then open:
 
+- Dashboard: <http://localhost:8000/dashboard>
 - API documentation: <http://localhost:8000/docs>
 - Health check: <http://localhost:8000/health>
 
@@ -47,11 +48,26 @@ curl -s http://localhost:8000/v1/incidents | python3 -m json.tool
 
 Stop with `docker compose down`. Reset the database too with `make clean`.
 
+## Reviewer dashboard
+
+The root URL opens a responsive, read-only operational dashboard inspired by CredResolve's identity system. It shows campaign policy, heartbeat-qualified human capacity, recent call intents, provider health, incidents, and the exact Safety Controller receipt authorizing each batch. The page refreshes every 15 seconds and has no frontend build step.
+
+## Render deployment
+
+[`render.yaml`](render.yaml) provisions the complete public demo in Singapore: a Docker web service, Docker background worker, and private PostgreSQL 16 database. The web service runs Alembic before deploy, seeds the synthetic reviewer demo once, and sets `PUBLIC_DEMO_READ_ONLY=true` so public visitors cannot mutate the API.
+
+1. In Render, select **New → Blueprint** and connect this repository.
+2. Deploy the detected `render.yaml` Blueprint.
+3. When the web service is healthy, add `dialer-dashboard.dubey.page` under **Settings → Custom Domains**.
+4. Add the DNS record Render provides at the DNS host for `dubey.page`; Render provisions HTTPS after verification.
+
+The local API remains writable because read-only mode is enabled only by the Render environment variable.
+
 ## Verify the submission
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 84 unit + real PostgreSQL integration tests
+make test        # 89 unit + real PostgreSQL integration tests
 make simulate    # pacing + PostgreSQL-executed failure evidence
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make smoke       # fresh Compose build, migration, API, CLI, demo, and worker check
@@ -97,7 +113,7 @@ The deliberate tradeoff is a PostgreSQL-backed modular monolith: fewer moving pa
 - Provider-event-derived setup/talk averages and expected near-term human releases.
 - Virtual-time simulator with ringing latency, busy human agents, timed releases,
   provider failures, and measured occupancy; no simulator-only pacing or safety formula.
-- REST + CLI operations, load test, CI; intentionally no dashboard.
+- REST + CLI operations, CredResolve-inspired read-only dashboard, load test, and CI.
 
 ## Architecture
 

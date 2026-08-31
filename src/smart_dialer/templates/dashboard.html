@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8fafc">
+  <meta http-equiv="refresh" content="15">
+  <title>SmartDialer Control Room · CredResolve</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/dashboard.css') }}">
+</head>
+<body>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/dashboard" aria-label="CredResolve SmartDialer dashboard">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-copy">
+          <strong>CredResolve</strong>
+          <small>SmartDialer control room</small>
+        </span>
+      </a>
+      <div class="topbar-actions">
+        <span class="live-status"><i></i> System telemetry live</span>
+        <a class="quiet-link" href="/docs">API docs <span>↗</span></a>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Human-led collections · Live telemetry</p>
+        <h1 id="page-title">Capacity moves.<br><span>Safety moves first.</span></h1>
+      </div>
+      <div class="intro-note">
+        <span>Last synchronized</span>
+        <strong>{{ generated_at.strftime('%H:%M:%S') }} UTC</strong>
+        <small>Refreshes every 15 seconds</small>
+      </div>
+    </section>
+
+    {% if not campaigns %}
+    <section class="empty-state">
+      <div class="empty-orbit" aria-hidden="true"><span></span></div>
+      <div>
+        <p class="eyebrow">Control room ready</p>
+        <h2>No campaigns yet</h2>
+        <p>Create a campaign with the CLI or REST API, add human agents and borrowers, then run one pacing tick. Live operational evidence will appear here.</p>
+        <p class="empty-signal"><span></span> Safety pulse awaiting first receipt</p>
+        <div class="empty-actions">
+          <a class="primary-link" href="/docs">Open API workspace →</a>
+          <code>smart-dialer seed-demo</code>
+        </div>
+      </div>
+    </section>
+    {% else %}
+    <section class="metric-rail" aria-label="System summary">
+      <article class="metric violet">
+        <span>Campaigns</span>
+        <strong>{{ metrics.campaigns }}</strong>
+        <small>{{ campaigns[0].mode }} pacing active</small>
+      </article>
+      <article class="metric">
+        <span>Humans available</span>
+        <strong>{{ metrics.available_agents }}<em>/{{ metrics.total_agents }}</em></strong>
+        <small>Heartbeat-qualified capacity</small>
+      </article>
+      <article class="metric">
+        <span>Calls in flight</span>
+        <strong>{{ metrics.active_calls }}</strong>
+        <small>{{ metrics.queued_borrowers }} borrowers queued</small>
+      </article>
+      <article class="metric {% if metrics.manual_review %}warning{% endif %}">
+        <span>Manual review</span>
+        <strong>{{ metrics.manual_review }}</strong>
+        <small>{% if metrics.manual_review %}Human attention required{% else %}No unresolved exceptions{% endif %}</small>
+      </article>
+    </section>
+
+    <section class="primary-grid">
+      <article class="panel safety-panel">
+        <div class="panel-head inverse">
+          <div>
+            <p class="eyebrow">Authorization boundary</p>
+            <h2>Safety pulse</h2>
+          </div>
+          {% if safety %}<span class="receipt-id">Receipt {{ safety.id }}</span>{% endif %}
+        </div>
+        {% if safety %}
+        <div class="safety-core">
+          <div class="decision-orbit {{ safety.decision }}">
+            <div>
+              <strong>{{ safety.approved }}</strong>
+              <span>of {{ safety.requested }}</span>
+            </div>
+          </div>
+          <div class="safety-copy">
+            <span class="status-chip {{ safety.decision }}">{{ safety.decision_label }}</span>
+            <h3>{{ safety.mode }} permission</h3>
+            <p>{{ safety.campaign }}</p>
+            <dl>
+              <div><dt>Risk ceiling</dt><dd>{{ '%.3f'|format(safety.risk_percent) }}%</dd></div>
+              <div><dt>Calculated overload</dt><dd>{{ '%.4f'|format(safety.overload_percent) }}%</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="reason-line">
+          <span>Why</span>
+          <p>{% if safety.reasons %}{{ safety.reasons|join(' · ') }}{% else %}Within confidence-bounded capacity{% endif %}</p>
+        </div>
+        {% else %}
+        <div class="panel-empty inverse-empty">Run a pacing tick to generate the first immutable authorization receipt.</div>
+        {% endif %}
+      </article>
+
+      <article class="panel capacity-panel">
+        <div class="panel-head">
+          <div><p class="eyebrow">Human capacity</p><h2>Agent presence</h2></div>
+          <span class="panel-meta">5s heartbeat · 15s timeout</span>
+        </div>
+        <div class="capacity-bar" aria-label="Agent state distribution">
+          {% for state in agent_states %}
+          <span class="state-{{ state.key }}" style="width: {{ state.percent }}%" title="{{ state.label }}: {{ state.count }}"></span>
+          {% endfor %}
+        </div>
+        <div class="state-legend">
+          {% for state in agent_states %}
+          <span><i class="state-{{ state.key }}"></i>{{ state.label }} <strong>{{ state.count }}</strong></span>
+          {% endfor %}
+        </div>
+        <div class="agent-list">
+          {% for agent in agents %}
+          <div class="agent-row">
+            <span class="avatar">{{ agent.name[0] }}</span>
+            <div><strong>{{ agent.name }}</strong><small>{{ agent.campaign }}</small></div>
+            <span class="agent-state state-text-{{ agent.state }}">{{ agent.state_label }}</span>
+            <span class="heartbeat">{% if agent.heartbeat is not none %}{{ agent.heartbeat }}s ago{% else %}No pulse{% endif %}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </article>
+    </section>
+
+    <section class="operations-grid">
+      <article class="panel calls-panel">
+        <div class="panel-head">
+          <div><p class="eyebrow">Durable workflow</p><h2>Recent call intents</h2></div>
+          <span class="panel-meta">Every row carries a safety receipt</span>
+        </div>
+        {% if calls %}
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Call</th><th>Borrower / campaign</th><th>Human</th><th>Provider</th><th>State</th><th>Safety</th></tr></thead>
+            <tbody>
+              {% for call in calls %}
+              <tr>
+                <td><code>{{ call.id }}</code><small>{{ call.mode }}</small></td>
+                <td><strong>{{ call.borrower }}</strong><small>{{ call.campaign }}</small></td>
+                <td>{{ call.agent }}</td>
+                <td>{{ call.provider }}</td>
+                <td><span class="call-state state-text-{{ call.state }}">{{ call.state_label }}</span></td>
+                <td><code class="receipt-code">{{ call.safety_id }}</code></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}<div class="panel-empty">Approved call intents will appear here.</div>{% endif %}
+      </article>
+
+      <aside class="side-stack">
+        <article class="panel compact-panel">
+          <div class="panel-head"><div><p class="eyebrow">Telecom simulation</p><h2>Provider health</h2></div></div>
+          {% if providers %}
+          <div class="provider-list">
+            {% for provider in providers %}
+            <div>
+              <span class="provider-mark">{{ provider.name[0] }}</span>
+              <p><strong>{{ provider.name }}</strong><small>{{ provider.attempts }} recent attempts · {{ provider.failure_rate }}% failed</small></p>
+              <span class="health {{ provider.state }}"><i></i>{{ provider.state_label }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}<div class="panel-empty">Provider telemetry starts with the first campaign.</div>{% endif %}
+        </article>
+
+        <article class="panel compact-panel">
+          <div class="panel-head"><div><p class="eyebrow">Exception path</p><h2>Incidents</h2></div><span class="count-badge">{{ incidents|length }}</span></div>
+          {% if incidents %}
+          <div class="incident-list">
+            {% for incident in incidents %}
+            <div><i></i><p><strong>{{ incident.kind }}</strong><small>Call {{ incident.call_id }} · {{ incident.status }}</small></p></div>
+            {% endfor %}
+          </div>
+          {% else %}<div class="clear-state"><span>✓</span><p><strong>Quiet system</strong><small>No incidents require attention.</small></p></div>{% endif %}
+        </article>
+      </aside>
+    </section>
+
+    <section class="campaign-strip">
+      <div><p class="eyebrow">Campaign policy</p><h2>Configured lanes</h2></div>
+      <div class="campaign-list">
+        {% for campaign in campaigns %}
+        <article><span class="lane"></span><div><strong>{{ campaign.name }}</strong><small>{{ campaign.language }} · {{ campaign.provider }}</small></div><span>{{ campaign.mode }}</span><code>{{ '%.2f'|format(campaign.risk_percent) }}% risk</code></article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <footer>
+      <p>CredResolve SmartDialer <span>·</span> Human agents, confidence-bounded pacing.</p>
+      <p>Mock telecom only <span>·</span> PostgreSQL source of truth</p>
+    </footer>
+  </main>
+</body>
+</html>

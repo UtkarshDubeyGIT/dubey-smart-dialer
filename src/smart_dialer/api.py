@@ -1,17 +1,24 @@
 from collections.abc import Iterator
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Annotated, Literal
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session, sessionmaker
+from starlette.responses import RedirectResponse
+from starlette.responses import JSONResponse
+from starlette.staticfiles import StaticFiles
+from starlette.templating import Jinja2Templates
 
 from smart_dialer.db.models import (
     Agent, Borrower, CallIntent, Campaign, Incident, ProviderEvent, ProviderHealth,
     SafetyDecision,
 )
 from smart_dialer.db.session import build_session_factory
+from smart_dialer.dashboard import load_dashboard
+from smart_dialer.config import get_settings
 from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.providers.base import NormalizedProviderEvent
 from smart_dialer.services.coordinator import run_pacing_tick
@@ -60,15 +67,57 @@ class ProviderEventCreate(BaseModel):
     payload: dict = Field(default_factory=dict)
 
 
-def create_app(*, session_factory: sessionmaker[Session] | None = None) -> FastAPI:
+def create_app(
+    *,
+    session_factory: sessionmaker[Session] | None = None,
+    read_only: bool | None = None,
+) -> FastAPI:
     factory = session_factory or build_session_factory()
+    read_only = (
+        get_settings().public_demo_read_only if read_only is None else read_only
+    )
     app = FastAPI(title="CredResolve SmartDialer", version="0.1.0")
+    package_dir = Path(__file__).resolve().parent
+    app.mount(
+        "/static",
+        StaticFiles(directory=package_dir / "static"),
+        name="static",
+    )
+    templates = Jinja2Templates(directory=package_dir / "templates")
+
+    @app.middleware("http")
+    async def protect_public_demo(request: Request, call_next):
+        if read_only and request.method not in {"GET", "HEAD", "OPTIONS"}:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "detail": (
+                        "Public demo is read-only. Use the local CLI or API to make changes."
+                    )
+                },
+            )
+        response = await call_next(request)
+        if read_only:
+            response.headers["X-SmartDialer-Demo"] = "read-only"
+        return response
 
     def get_session() -> Iterator[Session]:
         with factory() as session:
             yield session
 
     Db = Annotated[Session, Depends(get_session)]
+
+    @app.get("/", include_in_schema=False)
+    def root() -> RedirectResponse:
+        return RedirectResponse("/dashboard")
+
+    @app.get("/dashboard", include_in_schema=False)
+    def dashboard(request: Request, db: Db):
+        return templates.TemplateResponse(
+            request=request,
+            name="dashboard.html",
+            context=load_dashboard(db),
+        )
 
     @app.get("/health")
     def health(db: Db) -> dict:
