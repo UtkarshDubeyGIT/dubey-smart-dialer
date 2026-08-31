@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: smartdialer
       POSTGRES_PASSWORD: smartdialer
     ports:
-      - "5432:5432"
+      - "${SMART_DIALER_DB_PORT:-5432}:5432"
     volumes:
       - smartdialer_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -21,7 +21,7 @@ services:
       DATABASE_URL: postgresql+psycopg://smartdialer:smartdialer@db:5432/smartdialer
     command: ["sh", "-c", "alembic upgrade head && smart-dialer serve"]
     ports:
-      - "8000:8000"
+      - "${SMART_DIALER_API_PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -53,7 +53,7 @@ services:
       MAX_CLIENT_CONN: 500
       DEFAULT_POOL_SIZE: 30
     ports:
-      - "6432:5432"
+      - "${SMART_DIALER_POOLER_PORT:-6432}:5432"
     depends_on:
       db:
         condition: service_healthy

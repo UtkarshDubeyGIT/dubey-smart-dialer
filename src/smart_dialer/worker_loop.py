@@ -1,3 +1,4 @@
+import logging
 import time
 from datetime import UTC, datetime, timedelta
 
@@ -14,6 +15,9 @@ from smart_dialer.services.presence import reap_silent_agents, reconcile_cancell
 from smart_dialer.services.provider_health import provider_allows_initiation, record_provider_attempt
 from smart_dialer.services.recovery import claim_next_intent
 from smart_dialer.services.worker import initiate_intent_with_reconciliation
+
+
+logger = logging.getLogger("smart_dialer.worker")
 
 
 def run_once(factory: sessionmaker[Session]) -> bool:
@@ -89,7 +93,15 @@ def run_once(factory: sessionmaker[Session]) -> bool:
 
 def run_forever(*, poll_seconds: float = 0.5) -> None:
     factory = build_session_factory()
+    logger.info("Worker started; polling every %.2fs.", poll_seconds)
     while True:
-        worked = run_once(factory)
+        try:
+            worked = run_once(factory)
+        except Exception:
+            logger.exception(
+                "Worker iteration failed; retrying in %.2fs.", poll_seconds
+            )
+            time.sleep(poll_seconds)
+            continue
         if not worked:
             time.sleep(poll_seconds)

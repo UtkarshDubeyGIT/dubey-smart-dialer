@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="470" viewBox="0 0 1120 470" role="img" aria-labelledby="title description">
+  <title id="title">CredResolve SmartDialer terminal demo</title>
+  <description id="description">A terminal transcript showing the Docker stack starting and a reviewer demo completing thirteen safe mock calls.</description>
+  <rect width="1120" height="470" rx="18" fill="#0d1117"/>
+  <rect x="1" y="1" width="1118" height="468" rx="17" fill="none" stroke="#30363d" stroke-width="2"/>
+  <circle cx="30" cy="28" r="7" fill="#ff5f56"/>
+  <circle cx="54" cy="28" r="7" fill="#ffbd2e"/>
+  <circle cx="78" cy="28" r="7" fill="#27c93f"/>
+  <text x="560" y="34" text-anchor="middle" fill="#8b949e" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="15">reviewer@credresolve — smart-dialer</text>
+  <line x1="0" y1="52" x2="1120" y2="52" stroke="#30363d"/>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-size="19">
+    <text x="32" y="92" fill="#79c0ff">$</text>
+    <text x="58" y="92" fill="#f0f6fc">make demo</text>
+
+    <text x="32" y="132" fill="#d29922">[INFO]</text>
+    <text x="110" y="132" fill="#c9d1d9">Building and starting PostgreSQL, API, and worker...</text>
+
+    <text x="32" y="172" fill="#3fb950">[OK]</text>
+    <text x="86" y="172" fill="#c9d1d9">SmartDialer started:</text>
+    <text x="322" y="172" fill="#58a6ff">http://localhost:8000/docs</text>
+
+    <text x="32" y="212" fill="#d29922">[INFO]</text>
+    <text x="110" y="212" fill="#c9d1d9">Running the prepared reviewer demo...</text>
+
+    <text x="32" y="252" fill="#3fb950">[OK]</text>
+    <text x="86" y="252" fill="#f0f6fc">Reviewer demo ready</text>
+
+    <text x="58" y="292" fill="#8b949e">Campaign ID</text>
+    <text x="260" y="292" fill="#c9d1d9">3c7354...cf3ed</text>
+
+    <text x="58" y="327" fill="#8b949e">Approved calls</text>
+    <text x="260" y="327" fill="#f0f6fc">13</text>
+
+    <text x="58" y="362" fill="#8b949e">Processed calls</text>
+    <text x="260" y="362" fill="#f0f6fc">13</text>
+
+    <text x="58" y="397" fill="#8b949e">Inspect</text>
+    <text x="260" y="397" fill="#58a6ff">/v1/safety-decisions</text>
+    <text x="506" y="397" fill="#c9d1d9">and</text>
+    <text x="552" y="397" fill="#58a6ff">/v1/call-intents</text>
+
+    <text x="32" y="438" fill="#3fb950">✓ Fresh Compose smoke test passed</text>
+    <text x="440" y="438" fill="#8b949e">database · migrations · API · CLI · worker</text>
+  </g>
+</svg>

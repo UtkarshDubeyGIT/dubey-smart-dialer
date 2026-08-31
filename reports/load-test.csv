@@ -1,4 +1,4 @@
 scale,measured_allocations,throughput_per_second,p50_ms,p95_ms,p99_ms,skip_or_retry_count,deadlocks,duplicate_agents,duplicate_borrowers,pool_max_checked_out,pool_capacity,pool_saturation_percent,agent_drop_percent,agents_released,heartbeat_release_virtual_seconds,heartbeat_release_db_ms
-100,100,283.34,75.712,162.749,175.348,59,0,0,0,32,32,100.0,40,40,15.0,4.751
-1000,1000,451.01,64.304,122.214,154.764,61,0,0,0,32,32,100.0,40,400,15.0,21.369
-10000,1000,176.55,145.271,348.044,586.291,31,0,0,0,32,32,100.0,40,4000,15.0,249.108
+100,100,280.19,71.111,183.108,200.999,51,0,0,0,32,32,100.0,40,40,15.0,4.757
+1000,1000,408.51,71.279,123.284,159.786,72,0,0,0,32,32,100.0,40,400,15.0,26.047
+10000,1000,133.83,192.296,520.993,711.124,31,0,0,0,32,32,100.0,40,4000,15.0,236.72

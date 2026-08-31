@@ -1,8 +1,12 @@
 # CredResolve SmartDialer
 
+[![CI](https://github.com/UtkarshDubeyGIT/dubey-smart-dialer/actions/workflows/ci.yml/badge.svg)](https://github.com/UtkarshDubeyGIT/dubey-smart-dialer/actions/workflows/ci.yml)
+
 A safety-first functional prototype for **human collections agents**. It implements progressive dialing, confidence-bounded predictive pacing, a non-bypassable Safety Controller, PostgreSQL-safe allocation, two deterministic telecom simulators, crash recovery, failure simulations, and contention tests.
 
 No real borrower is called. `PlivoMockProvider` and `BlandMockProvider` make **zero network requests**.
+
+![Terminal demo showing a successful reviewer run](docs/demo-terminal.svg)
 
 ## Run it in three commands
 
@@ -47,15 +51,30 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 71 unit + real PostgreSQL integration tests
+make test        # 79 unit + real PostgreSQL integration tests
 make simulate    # pacing + PostgreSQL-executed failure evidence
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
+make smoke       # fresh Compose build, migration, API, CLI, demo, and worker check
 make verify      # tests, simulation, compilation, Compose validation
 ```
 
 `make test`, `make simulate`, and `make load-test` use Testcontainers and ephemeral PostgreSQL 16. Docker must be running; no shared test database is needed. Race tests use separate connections released on a shared barrier, not sequential awaits. Failure simulation executes the real allocation, lease recovery, event inbox, circuit, worker, and presence services; it does not print declared outcomes.
 
+`make smoke` uses an isolated Compose project and temporary host ports, runs the packaged reviewer demo, verifies worker liveness, and removes only its own containers and volume. CI runs this complete startup path on every push and pull request.
+
 If Docker points to a stopped context, select a working one first (Docker Desktop on macOS is commonly `docker context use desktop-linux`).
+
+## Reviewer evidence map
+
+| Question | Implementation | Executable evidence |
+|---|---|---|
+| Can pacing bypass safety? | Pacing proposes only; the coordinator persists a Safety Controller receipt before allocation. | [`test_coordinator.py`](tests/integration/test_coordinator.py) |
+| Can two workers assign the same human or borrower? | PostgreSQL `SKIP LOCKED`, one transaction, and fixed agent-before-borrower lock order. | [`test_allocation_concurrency.py`](tests/integration/test_allocation_concurrency.py) |
+| Are retries safe after ambiguous provider failures? | Durable leases plus provider-local idempotency reconciliation. | [`test_recovery_and_events.py`](tests/integration/test_recovery_and_events.py) |
+| Are failure claims simulated or executed? | Worker crash, event disorder, circuit recovery, and heartbeat loss run against ephemeral PostgreSQL. | [`test_failure_simulation.py`](tests/integration/test_failure_simulation.py) |
+| Does the packaged application actually start? | CI builds the image, applies migrations, probes the API, runs the demo, checks the CLI and worker, then cleans up. | [`compose-smoke.sh`](scripts/compose-smoke.sh) |
+
+The deliberate tradeoff is a PostgreSQL-backed modular monolith: fewer moving parts and stronger transactional reasoning for the prototype, at the cost of eventually needing worker partitioning and a production connection strategy at larger scale. Statistical conservatism can reduce utilization, but it keeps the safety decision explainable and operator-bounded.
 
 ## Implemented
 
@@ -125,7 +144,10 @@ uv run smart-dialer borrower-create <campaign-id> B-001 +919999999999
 uv run smart-dialer pacing-tick <campaign-id>
 uv run smart-dialer list-state
 uv run smart-dialer simulate
+uv run smart-dialer --json list-state  # stable machine-readable output
 ```
+
+Commands print short human summaries by default. Validation failures use one-line errors with a corrective hint; `--json` preserves automation-friendly output. The worker logs startup and unexpected iteration failures, then retries instead of silently exiting.
 
 The local API intentionally has no authentication. Production requires service authentication, operator RBAC, and audit trails.
 

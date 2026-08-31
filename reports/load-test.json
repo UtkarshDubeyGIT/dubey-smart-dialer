@@ -5,11 +5,11 @@
     {
       "scale": 100,
       "measured_allocations": 100,
-      "throughput_per_second": 283.34,
-      "p50_ms": 75.712,
-      "p95_ms": 162.749,
-      "p99_ms": 175.348,
-      "skip_or_retry_count": 59,
+      "throughput_per_second": 280.19,
+      "p50_ms": 71.111,
+      "p95_ms": 183.108,
+      "p99_ms": 200.999,
+      "skip_or_retry_count": 51,
       "deadlocks": 0,
       "duplicate_agents": 0,
       "duplicate_borrowers": 0,
@@ -19,16 +19,16 @@
       "agent_drop_percent": 40,
       "agents_released": 40,
       "heartbeat_release_virtual_seconds": 15.0,
-      "heartbeat_release_db_ms": 4.751
+      "heartbeat_release_db_ms": 4.757
     },
     {
       "scale": 1000,
       "measured_allocations": 1000,
-      "throughput_per_second": 451.01,
-      "p50_ms": 64.304,
-      "p95_ms": 122.214,
-      "p99_ms": 154.764,
-      "skip_or_retry_count": 61,
+      "throughput_per_second": 408.51,
+      "p50_ms": 71.279,
+      "p95_ms": 123.284,
+      "p99_ms": 159.786,
+      "skip_or_retry_count": 72,
       "deadlocks": 0,
       "duplicate_agents": 0,
       "duplicate_borrowers": 0,
@@ -38,15 +38,15 @@
       "agent_drop_percent": 40,
       "agents_released": 400,
       "heartbeat_release_virtual_seconds": 15.0,
-      "heartbeat_release_db_ms": 21.369
+      "heartbeat_release_db_ms": 26.047
     },
     {
       "scale": 10000,
       "measured_allocations": 1000,
-      "throughput_per_second": 176.55,
-      "p50_ms": 145.271,
-      "p95_ms": 348.044,
-      "p99_ms": 586.291,
+      "throughput_per_second": 133.83,
+      "p50_ms": 192.296,
+      "p95_ms": 520.993,
+      "p99_ms": 711.124,
       "skip_or_retry_count": 31,
       "deadlocks": 0,
       "duplicate_agents": 0,
@@ -57,7 +57,7 @@
       "agent_drop_percent": 40,
       "agents_released": 4000,
       "heartbeat_release_virtual_seconds": 15.0,
-      "heartbeat_release_db_ms": 249.108
+      "heartbeat_release_db_ms": 236.72
     }
   ],
   "pgbouncer_comparison": "optional Compose profile; not run in the default test",

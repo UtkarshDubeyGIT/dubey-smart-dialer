@@ -168,10 +168,51 @@ def run(output: Path) -> dict:
     output.write_text(json.dumps(report, indent=2) + "\n")
     csv_path = output.with_suffix(".csv")
     with csv_path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=rows[0].keys())
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=rows[0].keys(),
+            lineterminator="\n",
+        )
         writer.writeheader(); writer.writerows(rows)
-    print(json.dumps(report, indent=2))
+    print_report(report, output=output, csv_path=csv_path)
     return report
+
+
+def print_report(report: dict, *, output: Path, csv_path: Path) -> None:
+    print(f"[OK] Load test complete (deterministic seed {report['seed']})")
+    columns = (
+        ("Scale", 10),
+        ("Allocations", 13),
+        ("Throughput/s", 15),
+        ("p50 ms", 10),
+        ("p95 ms", 10),
+        ("p99 ms", 10),
+        ("Retries", 10),
+        ("Deadlocks", 11),
+        ("Pool saturation", 16),
+    )
+    print("  " + "".join(f"{heading:<{width}}" for heading, width in columns))
+    for row in report["rows"]:
+        values = (
+            f"{row['scale']:,}",
+            f"{row['measured_allocations']:,}",
+            row["throughput_per_second"],
+            row["p50_ms"],
+            row["p95_ms"],
+            row["p99_ms"],
+            row["skip_or_retry_count"],
+            row["deadlocks"],
+            f"{row['pool_saturation_percent']}%",
+        )
+        print(
+            "  "
+            + "".join(
+                f"{str(value):<{width}}"
+                for value, (_, width) in zip(values, columns, strict=True)
+            )
+        )
+    print(f"  JSON report      {output}")
+    print(f"  CSV report       {csv_path}")
 
 
 if __name__ == "__main__":
