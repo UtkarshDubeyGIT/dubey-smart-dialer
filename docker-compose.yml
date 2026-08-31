@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: smartdialer
+      POSTGRES_USER: smartdialer
+      POSTGRES_PASSWORD: smartdialer
+    ports:
+      - "5432:5432"
+    volumes:
+      - smartdialer_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartdialer -d smartdialer"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://smartdialer:smartdialer@db:5432/smartdialer
+    command: ["sh", "-c", "alembic upgrade head && smart-dialer serve"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://smartdialer:smartdialer@db:5432/smartdialer
+    command: ["smart-dialer", "worker"]
+    depends_on:
+      api:
+        condition: service_healthy
+
+  pgbouncer:
+    image: edoburu/pgbouncer:1.23.1-p2
+    profiles: ["pooler"]
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: smartdialer
+      DB_PASSWORD: smartdialer
+      DB_NAME: smartdialer
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 500
+      DEFAULT_POOL_SIZE: 30
+    ports:
+      - "6432:5432"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  smartdialer_pgdata:

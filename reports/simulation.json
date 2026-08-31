@@ -1,0 +1,1294 @@
+{
+  "seed": 2026,
+  "pacing_scenarios": [
+    {
+      "scenario": "A",
+      "seed": 2026,
+      "answer_rate": 0.2,
+      "average_talk_seconds": 120,
+      "calls_proposed": 2920,
+      "calls_approved": 1660,
+      "calls_initiated": 1660,
+      "calls_connected": 325,
+      "observed_answer_rate": 0.1976,
+      "agent_utilization": 0.5417,
+      "overload_events": 1,
+      "progressive_fallbacks": 2,
+      "safety_decisions": [
+        {
+          "tick": 0,
+          "proposed": 20,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 1,
+          "proposed": 100,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 2,
+          "proposed": 100,
+          "approved": 58,
+          "mode": "predictive",
+          "risk": 0.004138501588160537,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 3,
+          "proposed": 100,
+          "approved": 67,
+          "mode": "predictive",
+          "risk": 0.004236856508224343,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 4,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.004323920138896386,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 5,
+          "proposed": 100,
+          "approved": 58,
+          "mode": "predictive",
+          "risk": 0.004630559451246743,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 6,
+          "proposed": 100,
+          "approved": 59,
+          "mode": "predictive",
+          "risk": 0.00487453353561916,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 7,
+          "proposed": 100,
+          "approved": 61,
+          "mode": "predictive",
+          "risk": 0.004329246719323138,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 8,
+          "proposed": 100,
+          "approved": 59,
+          "mode": "predictive",
+          "risk": 0.004646349213593532,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 9,
+          "proposed": 100,
+          "approved": 59,
+          "mode": "predictive",
+          "risk": 0.0040172582174023705,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 10,
+          "proposed": 100,
+          "approved": 59,
+          "mode": "predictive",
+          "risk": 0.004037046018016783,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 11,
+          "proposed": 100,
+          "approved": 60,
+          "mode": "predictive",
+          "risk": 0.0040349655533535094,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 12,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.004047297380419877,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 13,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.004364106293783463,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 14,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004639234951314053,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 15,
+          "proposed": 100,
+          "approved": 55,
+          "mode": "predictive",
+          "risk": 0.004402605636417198,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 16,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004165863365419316,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 17,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004358926732105648,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 18,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004530367263783843,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 19,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.0047198028859637186,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 20,
+          "proposed": 100,
+          "approved": 58,
+          "mode": "predictive",
+          "risk": 0.00465369480327236,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 21,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.0042208649763531255,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 22,
+          "proposed": 100,
+          "approved": 58,
+          "mode": "predictive",
+          "risk": 0.004273532068496107,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 23,
+          "proposed": 100,
+          "approved": 59,
+          "mode": "predictive",
+          "risk": 0.004124140747148565,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 24,
+          "proposed": 100,
+          "approved": 59,
+          "mode": "predictive",
+          "risk": 0.00406059837890384,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 25,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.004301781616506073,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 26,
+          "proposed": 100,
+          "approved": 57,
+          "mode": "predictive",
+          "risk": 0.004047322664721732,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 27,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004322693639417549,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 28,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004938296877910857,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 29,
+          "proposed": 100,
+          "approved": 56,
+          "mode": "predictive",
+          "risk": 0.004826989027077888,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "B",
+      "seed": 2027,
+      "answer_rate": 0.5,
+      "average_talk_seconds": 90,
+      "calls_proposed": 1183,
+      "calls_approved": 749,
+      "calls_initiated": 749,
+      "calls_connected": 388,
+      "observed_answer_rate": 0.518,
+      "agent_utilization": 0.6467,
+      "overload_events": 0,
+      "progressive_fallbacks": 2,
+      "safety_decisions": [
+        {
+          "tick": 0,
+          "proposed": 20,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 1,
+          "proposed": 34,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 2,
+          "proposed": 37,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.0018744122255540706,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 3,
+          "proposed": 39,
+          "approved": 23,
+          "mode": "predictive",
+          "risk": 0.0017257064184551143,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 4,
+          "proposed": 38,
+          "approved": 23,
+          "mode": "predictive",
+          "risk": 0.0016526472249529718,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 5,
+          "proposed": 39,
+          "approved": 24,
+          "mode": "predictive",
+          "risk": 0.003141581844254233,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 6,
+          "proposed": 39,
+          "approved": 24,
+          "mode": "predictive",
+          "risk": 0.002315412720766911,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 7,
+          "proposed": 40,
+          "approved": 25,
+          "mode": "predictive",
+          "risk": 0.004351831453782054,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 8,
+          "proposed": 39,
+          "approved": 25,
+          "mode": "predictive",
+          "risk": 0.004696484710396043,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 9,
+          "proposed": 41,
+          "approved": 25,
+          "mode": "predictive",
+          "risk": 0.002462616175665208,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 10,
+          "proposed": 40,
+          "approved": 25,
+          "mode": "predictive",
+          "risk": 0.003548047081520046,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 11,
+          "proposed": 40,
+          "approved": 25,
+          "mode": "predictive",
+          "risk": 0.0033699189629172047,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 12,
+          "proposed": 40,
+          "approved": 25,
+          "mode": "predictive",
+          "risk": 0.00261314444980811,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 13,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.00397002745435986,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 14,
+          "proposed": 42,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0026778961666537996,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 15,
+          "proposed": 43,
+          "approved": 27,
+          "mode": "predictive",
+          "risk": 0.0047536167779378465,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 16,
+          "proposed": 42,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0025485902452687843,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 17,
+          "proposed": 42,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0027362222187606393,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 18,
+          "proposed": 42,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0029083537408993512,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 19,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0032718548314836313,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 20,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0032109976907672756,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 21,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.002975272731678889,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 22,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0031026451595858127,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 23,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.003220682434110346,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 24,
+          "proposed": 41,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.003330148673406228,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 25,
+          "proposed": 40,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.004152901538385371,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 26,
+          "proposed": 40,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.004045087016153129,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 27,
+          "proposed": 40,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0043057808710397,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 28,
+          "proposed": 39,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.004951449527320063,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 29,
+          "proposed": 40,
+          "approved": 26,
+          "mode": "predictive",
+          "risk": 0.0046161990393103055,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "C",
+      "seed": 2028,
+      "answer_rate": 0.7,
+      "average_talk_seconds": 180,
+      "calls_proposed": 889,
+      "calls_approved": 635,
+      "calls_initiated": 635,
+      "calls_connected": 449,
+      "observed_answer_rate": 0.7071,
+      "agent_utilization": 0.7483,
+      "overload_events": 0,
+      "progressive_fallbacks": 2,
+      "safety_decisions": [
+        {
+          "tick": 0,
+          "proposed": 20,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 1,
+          "proposed": 27,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 2,
+          "proposed": 27,
+          "approved": 20,
+          "mode": "predictive",
+          "risk": 0.0,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 3,
+          "proposed": 30,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0029440364862009833,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 4,
+          "proposed": 30,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.002137855677777265,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 5,
+          "proposed": 33,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.0033480350359614383,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 6,
+          "proposed": 33,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.0024613824161368106,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 7,
+          "proposed": 33,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.0023420665523927993,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 8,
+          "proposed": 33,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.002237709708166571,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 9,
+          "proposed": 32,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.0032709019629550413,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 10,
+          "proposed": 32,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.0034229382118990603,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 11,
+          "proposed": 31,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.004419669543879746,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 12,
+          "proposed": 31,
+          "approved": 22,
+          "mode": "predictive",
+          "risk": 0.004019987293907762,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 13,
+          "proposed": 30,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0009270833869844194,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 14,
+          "proposed": 30,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0010563588922873936,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 15,
+          "proposed": 30,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0011811106383228822,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 16,
+          "proposed": 30,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0013006976188524135,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 17,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0014147902951455534,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 18,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0013195797708913837,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 19,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0015196909957196079,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 20,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0016164105926208378,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 21,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.001420418650883545,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 22,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0014195825098192727,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 23,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0013400169563258255,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 24,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0013413325397913915,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 25,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0012735049462748171,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 26,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0013422745273515635,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 27,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0014087825243307573,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 28,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0015432930880778116,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 29,
+          "proposed": 29,
+          "approved": 21,
+          "mode": "predictive",
+          "risk": 0.0015350878857914889,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "D-changing",
+      "seed": 2029,
+      "answer_rate": 0.2,
+      "average_talk_seconds": 120,
+      "calls_proposed": 2102,
+      "calls_approved": 1139,
+      "calls_initiated": 1139,
+      "calls_connected": 392,
+      "observed_answer_rate": 0.3802,
+      "agent_utilization": 0.6533,
+      "overload_events": 8,
+      "progressive_fallbacks": 5,
+      "safety_decisions": [
+        {
+          "tick": 0,
+          "proposed": 20,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 1,
+          "proposed": 100,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "cold start"
+          ]
+        },
+        {
+          "tick": 2,
+          "proposed": 100,
+          "approved": 46,
+          "mode": "predictive",
+          "risk": 0.003949723134796301,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 3,
+          "proposed": 100,
+          "approved": 64,
+          "mode": "predictive",
+          "risk": 0.004459231725370818,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 4,
+          "proposed": 100,
+          "approved": 66,
+          "mode": "predictive",
+          "risk": 0.004156275064681724,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 5,
+          "proposed": 100,
+          "approved": 62,
+          "mode": "predictive",
+          "risk": 0.004617219598294616,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 6,
+          "proposed": 100,
+          "approved": 54,
+          "mode": "predictive",
+          "risk": 0.004823577555295931,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 7,
+          "proposed": 97,
+          "approved": 49,
+          "mode": "predictive",
+          "risk": 0.0040138080561594545,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 8,
+          "proposed": 95,
+          "approved": 49,
+          "mode": "predictive",
+          "risk": 0.00450947025604072,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 9,
+          "proposed": 97,
+          "approved": 50,
+          "mode": "predictive",
+          "risk": 0.003950944852152179,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 10,
+          "proposed": 96,
+          "approved": 50,
+          "mode": "predictive",
+          "risk": 0.003852583733660342,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 11,
+          "proposed": 85,
+          "approved": 46,
+          "mode": "predictive",
+          "risk": 0.0049382792366135745,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 12,
+          "proposed": 73,
+          "approved": 41,
+          "mode": "predictive",
+          "risk": 0.004967406805035456,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 13,
+          "proposed": 68,
+          "approved": 38,
+          "mode": "predictive",
+          "risk": 0.0037512640263973125,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 14,
+          "proposed": 64,
+          "approved": 37,
+          "mode": "predictive",
+          "risk": 0.004860885522420366,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 15,
+          "proposed": 60,
+          "approved": 35,
+          "mode": "predictive",
+          "risk": 0.0037935496242721863,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 16,
+          "proposed": 57,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "provider degradation"
+          ]
+        },
+        {
+          "tick": 17,
+          "proposed": 56,
+          "approved": 33,
+          "mode": "predictive",
+          "risk": 0.003388996937288341,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 18,
+          "proposed": 54,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.0032241225713613327,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 19,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.004486441968703377,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 20,
+          "proposed": 51,
+          "approved": 31,
+          "mode": "predictive",
+          "risk": 0.0037016819866131723,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 21,
+          "proposed": 52,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "provider degradation"
+          ]
+        },
+        {
+          "tick": 22,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.004316541153256878,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 23,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.004204560014473758,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 24,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.0038115888338964713,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 25,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.0037308905149685684,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 26,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.0037844520536314034,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 27,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.0035857009788009655,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        },
+        {
+          "tick": 28,
+          "proposed": 53,
+          "approved": 20,
+          "mode": "progressive",
+          "risk": 0.0,
+          "reasons": [
+            "provider degradation"
+          ]
+        },
+        {
+          "tick": 29,
+          "proposed": 53,
+          "approved": 32,
+          "mode": "predictive",
+          "risk": 0.003771765283877896,
+          "reasons": [
+            "confidence-bounded overload limit"
+          ]
+        }
+      ]
+    }
+  ],
+  "failure_scenarios": {
+    "worker_crash": {
+      "lease_seconds": 30,
+      "recovered": true,
+      "duplicate_call": false
+    },
+    "duplicate_events": {
+      "events_received": 3,
+      "state_transitions": 1,
+      "database_dedup": true
+    },
+    "out_of_order_events": {
+      "terminal_absorbing": true,
+      "late_event_result": "stale"
+    },
+    "provider_outage": {
+      "circuit_opened": true,
+      "new_calls_paused": true
+    },
+    "agent_drop": {
+      "agents_lost": 40,
+      "heartbeat_bound_seconds": 15,
+      "fallback": "progressive"
+    }
+  }
+}
