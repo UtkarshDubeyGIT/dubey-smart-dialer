@@ -99,8 +99,8 @@ def test_dashboard_styles_are_packaged_with_the_application(
     assert "Graduate AI/ML systems assignment" in dashboard.text
     assert "Watch the dialer decide" in dashboard.text
     assert 'data-decision-lab' in dashboard.text
-    assert 'href="/static/dashboard.css?v=4"' in dashboard.text
-    assert 'src="/static/dashboard.js?v=4"' in dashboard.text
+    assert 'href="/static/dashboard.css?v=5"' in dashboard.text
+    assert 'src="/static/dashboard.js?v=5"' in dashboard.text
 
 
 def test_submission_is_attributed_and_readme_exposes_live_frontend(
@@ -117,6 +117,19 @@ def test_submission_is_attributed_and_readme_exposes_live_frontend(
     assert "docs/dashboard-preview.jpg" in readme
     assert "Built by **Utkarsh Dubey**" in readme
     assert "Designed and engineered" not in readme
+
+
+def test_capacity_diagram_uses_a_stable_marker_grid(client: TestClient) -> None:
+    dashboard = client.get("/dashboard")
+    styles = client.get("/static/dashboard.css")
+
+    assert dashboard.text.count('class="answer-dot"') == 18
+    assert 'class="answer-grid"' in dashboard.text
+    assert ">Safety gate<" in dashboard.text
+    assert "confidence-bounded gate" not in dashboard.text
+    assert "--item:" not in dashboard.text
+    assert ".answer-grid {" in styles.text
+    assert "var(--item)" not in styles.text
 
 
 def test_decision_lab_runs_the_production_pacing_and_safety_path(

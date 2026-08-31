@@ -8,8 +8,8 @@
   <meta property="og:title" content="CredResolve SmartDialer · Live AI/ML systems demo">
   <meta property="og:description" content="See the production pacing engine and mandatory Safety Controller make an explainable decision in real time.">
   <title>Live AI/ML SmartDialer · CredResolve</title>
-  <link rel="stylesheet" href="/static/dashboard.css?v=4">
-  <script src="/static/dashboard.js?v=4" defer></script>
+  <link rel="stylesheet" href="/static/dashboard.css?v=5">
+  <script src="/static/dashboard.js?v=5" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to the live demo</a>
@@ -106,9 +106,13 @@
         <p>Calling too slowly wastes agent time. Calling too aggressively means more borrowers answer than humans can serve. This prototype treats that overload probability as an explicit, operator-owned constraint.</p>
       </div>
       <div class="capacity-illustration" aria-label="The dialer balances answered calls against human capacity">
-        <div class="call-cloud"><span class="cloud-label">Borrower answers are uncertain</span>{% for item in range(18) %}<i style="--item: {{ item }}"></i>{% endfor %}</div>
-        <div class="curve-line"><span>confidence-bounded gate</span></div>
-        <div class="human-bank"><span class="bank-label">Human capacity is finite</span>{% for item in range(8) %}<i><b></b></i>{% endfor %}</div>
+        <div class="call-cloud">
+          <span class="cloud-label">Borrower answers are uncertain</span>
+          <div class="answer-grid" aria-hidden="true">{% for item in range(18) %}<i class="answer-dot"></i>{% endfor %}</div>
+          <small class="diagram-meta">18 modeled answer outcomes</small>
+        </div>
+        <div class="curve-line"><span>Safety gate</span></div>
+        <div class="human-bank"><span class="bank-label">Human capacity is finite</span>{% for item in range(8) %}<i><b></b></i>{% endfor %}<small class="diagram-meta">8 available humans</small></div>
       </div>
     </section>
 

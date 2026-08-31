@@ -77,7 +77,7 @@ The local API remains writable because read-only mode is enabled only by the Ren
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 93 unit + real PostgreSQL integration tests
+make test        # 94 unit + real PostgreSQL integration tests
 make simulate    # pacing + PostgreSQL-executed failure evidence
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make smoke       # fresh Compose build, migration, API, CLI, demo, and worker check
