@@ -1,3 +1,4 @@
+from click import unstyle
 from typer.testing import CliRunner
 
 from smart_dialer.cli import app
@@ -7,7 +8,7 @@ def test_cli_exposes_machine_readable_json_mode() -> None:
     result = CliRunner().invoke(app, ["--help"])
 
     assert result.exit_code == 0
-    assert "--json" in result.stdout
+    assert "--json" in unstyle(result.stdout)
 
 
 def test_pacing_cli_has_no_manual_answer_statistics_options() -> None:
