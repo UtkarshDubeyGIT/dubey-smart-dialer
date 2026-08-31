@@ -9,11 +9,12 @@ from smart_dialer.services.allocation import attach_agent_on_answer, reserve_pre
 from smart_dialer.services.presence import handle_graceful_departure, reap_silent_agents
 from smart_dialer.providers.base import NormalizedProviderEvent
 from smart_dialer.services.events import ingest_provider_event
+from tests.integration.support import add_approved_safety_decision
 
 pytestmark = pytest.mark.integration
 
 
-def seed(session_factory) -> tuple[str, str, str]:
+def seed(session_factory) -> tuple[str, str, str, str]:
     now = datetime.now(UTC)
     with session_factory.begin() as session:
         campaign = Campaign(name="predictive", mode="predictive", language="en-IN")
@@ -28,14 +29,18 @@ def seed(session_factory) -> tuple[str, str, str]:
         )
         session.add_all([agent, borrower])
         session.flush()
-        return campaign.id, agent.id, borrower.id
+        safety_decision_id = add_approved_safety_decision(
+            session, campaign_id=campaign.id, mode="predictive", approved_calls=1
+        )
+        return campaign.id, agent.id, borrower.id, safety_decision_id
 
 
 def test_predictive_dial_reserves_borrower_without_pre_reserving_agent(session_factory) -> None:
-    campaign_id, agent_id, _ = seed(session_factory)
+    campaign_id, agent_id, _, safety_decision_id = seed(session_factory)
     with session_factory.begin() as session:
         intent = reserve_predictive_borrower(
-            session, campaign_id=campaign_id, worker_id="pacer", now=datetime.now(UTC)
+            session, campaign_id=campaign_id, safety_decision_id=safety_decision_id,
+            worker_id="pacer", now=datetime.now(UTC)
         )
         assert intent is not None
         assert intent.mode is IntentMode.PREDICTIVE
@@ -44,10 +49,11 @@ def test_predictive_dial_reserves_borrower_without_pre_reserving_agent(session_f
 
 
 def test_answered_predictive_call_atomically_claims_human_agent(session_factory) -> None:
-    campaign_id, agent_id, _ = seed(session_factory)
+    campaign_id, agent_id, _, safety_decision_id = seed(session_factory)
     with session_factory.begin() as session:
         intent = reserve_predictive_borrower(
-            session, campaign_id=campaign_id, worker_id="pacer", now=datetime.now(UTC)
+            session, campaign_id=campaign_id, safety_decision_id=safety_decision_id,
+            worker_id="pacer", now=datetime.now(UTC)
         )
         intent.state = CallState.ANSWERED
         intent_id = intent.id
@@ -59,10 +65,13 @@ def test_answered_predictive_call_atomically_claims_human_agent(session_factory)
 
 
 def test_answered_event_automatically_attaches_human_agent(session_factory) -> None:
-    campaign_id, agent_id, _ = seed(session_factory)
+    campaign_id, agent_id, _, safety_decision_id = seed(session_factory)
     now = datetime.now(UTC)
     with session_factory.begin() as session:
-        intent = reserve_predictive_borrower(session, campaign_id=campaign_id, worker_id="pacer", now=now)
+        intent = reserve_predictive_borrower(
+            session, campaign_id=campaign_id, safety_decision_id=safety_decision_id,
+            worker_id="pacer", now=now
+        )
         intent.state = CallState.INITIATED
         intent_id = intent.id
     with session_factory.begin() as session:
@@ -80,11 +89,14 @@ def test_answered_event_automatically_attaches_human_agent(session_factory) -> N
 
 
 def test_answer_with_no_human_agent_creates_overload_incident(session_factory) -> None:
-    campaign_id, agent_id, _ = seed(session_factory)
+    campaign_id, agent_id, _, safety_decision_id = seed(session_factory)
     now = datetime.now(UTC)
     with session_factory.begin() as session:
         session.get(Agent, agent_id).state = AgentState.OFFLINE
-        intent = reserve_predictive_borrower(session, campaign_id=campaign_id, worker_id="pacer", now=now)
+        intent = reserve_predictive_borrower(
+            session, campaign_id=campaign_id, safety_decision_id=safety_decision_id,
+            worker_id="pacer", now=now
+        )
         intent.state = CallState.INITIATED
         intent_id = intent.id
     with session_factory.begin() as session:
@@ -101,7 +113,7 @@ def test_answer_with_no_human_agent_creates_overload_incident(session_factory) -
 
 
 def test_graceful_departure_is_immediate(session_factory) -> None:
-    campaign_id, agent_id, _ = seed(session_factory)
+    campaign_id, agent_id, _, _ = seed(session_factory)
     now = datetime.now(UTC)
     with session_factory.begin() as session:
         changed = handle_graceful_departure(session, agent_id=agent_id, target=AgentState.PAUSED, now=now)
@@ -110,7 +122,7 @@ def test_graceful_departure_is_immediate(session_factory) -> None:
 
 
 def test_silent_available_agent_is_offline_after_fifteen_seconds(session_factory) -> None:
-    _, agent_id, _ = seed(session_factory)
+    _, agent_id, _, _ = seed(session_factory)
     now = datetime.now(UTC)
     with session_factory.begin() as session:
         session.get(Agent, agent_id).last_heartbeat_at = now - timedelta(seconds=16)
@@ -121,13 +133,14 @@ def test_silent_available_agent_is_offline_after_fifteen_seconds(session_factory
 
 
 def test_ringing_reservation_gets_ten_second_cancel_lease_before_release(session_factory) -> None:
-    campaign_id, agent_id, borrower_id = seed(session_factory)
+    campaign_id, agent_id, borrower_id, safety_decision_id = seed(session_factory)
     now = datetime.now(UTC)
     with session_factory.begin() as session:
         agent = session.get(Agent, agent_id)
         borrower = session.get(Borrower, borrower_id)
         intent = CallIntent(
-            campaign_id=campaign_id, borrower_id=borrower_id, agent_id=agent_id,
+            campaign_id=campaign_id, safety_decision_id=safety_decision_id,
+            borrower_id=borrower_id, agent_id=agent_id,
             mode=IntentMode.PROGRESSIVE, state=CallState.RINGING, provider_name="plivo_mock",
             provider_idempotency_key="ringing-key", lease_owner="worker",
             lease_expires_at=now + timedelta(seconds=30),

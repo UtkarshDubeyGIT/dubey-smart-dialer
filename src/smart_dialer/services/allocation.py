@@ -23,6 +23,7 @@ def reserve_progressive_pair(
     session: Session,
     *,
     campaign_id: str,
+    safety_decision_id: str,
     worker_id: str,
     now: datetime,
 ) -> CallIntent | None:
@@ -71,6 +72,7 @@ def reserve_progressive_pair(
     intent = CallIntent(
         id=intent_id,
         campaign_id=campaign_id,
+        safety_decision_id=safety_decision_id,
         borrower_id=borrower.id,
         agent_id=agent.id,
         mode=IntentMode.PROGRESSIVE,
@@ -94,6 +96,7 @@ def reserve_predictive_borrower(
     session: Session,
     *,
     campaign_id: str,
+    safety_decision_id: str,
     worker_id: str,
     now: datetime,
 ) -> CallIntent | None:
@@ -119,6 +122,7 @@ def reserve_predictive_borrower(
     intent = CallIntent(
         id=intent_id,
         campaign_id=campaign_id,
+        safety_decision_id=safety_decision_id,
         borrower_id=borrower.id,
         mode=IntentMode.PREDICTIVE,
         state=CallState.RESERVED,

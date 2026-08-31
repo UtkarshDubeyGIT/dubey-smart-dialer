@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 
 from smart_dialer.db.models import (
     Agent,
@@ -16,6 +17,7 @@ from smart_dialer.db.models import (
 from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.services.coordinator import run_pacing_tick
 from smart_dialer.services.campaign_statistics import load_answer_history
+from tests.integration.support import add_approved_safety_decision
 
 pytestmark = pytest.mark.integration
 
@@ -53,6 +55,89 @@ def test_pacing_tick_persists_receipt_and_cannot_create_more_than_approved(sessi
     with session_factory() as session:
         assert session.scalar(select(func.count(CallIntent.id))) == result.receipt.approved_calls
         assert session.scalar(select(func.count(SafetyDecision.id))) == 1
+
+
+def test_database_rejects_call_intent_without_safety_decision(session_factory) -> None:
+    campaign_id = seed(
+        session_factory, mode="progressive", risk=0.005, agents=0, borrowers=1
+    )
+    with pytest.raises(IntegrityError):
+        with session_factory.begin() as session:
+            borrower = session.scalar(
+                select(Borrower).where(Borrower.campaign_id == campaign_id)
+            )
+            session.add(CallIntent(
+                campaign_id=campaign_id,
+                borrower_id=borrower.id,
+                mode=IntentMode.PROGRESSIVE,
+                state=CallState.RESERVED,
+                provider_name="plivo_mock",
+                provider_idempotency_key="missing-safety-decision",
+            ))
+            session.flush()
+
+
+def test_progressive_tick_persists_and_links_approved_safety_receipt(session_factory) -> None:
+    campaign_id = seed(
+        session_factory, mode="progressive", risk=0.005, agents=3, borrowers=10
+    )
+    with session_factory.begin() as session:
+        result = run_pacing_tick(
+            session,
+            campaign_id=campaign_id,
+            worker_id="progressive-receipt-test",
+            now=datetime.now(UTC),
+            observed_answers=30,
+            observed_attempts=100,
+        )
+
+    assert result.receipt.effective_mode == "progressive"
+    assert result.receipt.decision == "approved"
+    with session_factory() as session:
+        decision = session.scalar(
+            select(SafetyDecision).where(SafetyDecision.campaign_id == campaign_id)
+        )
+        intents = session.scalars(
+            select(CallIntent).where(CallIntent.campaign_id == campaign_id)
+        ).all()
+        assert len(intents) == 3
+        assert {intent.safety_decision_id for intent in intents} == {decision.id}
+
+
+def test_live_tick_detects_rapid_silent_agent_loss_from_presence_rows(session_factory) -> None:
+    campaign_id = seed(
+        session_factory, mode="predictive", risk=0.005, agents=20, borrowers=100
+    )
+    now = datetime.now(UTC)
+    with session_factory.begin() as session:
+        agents = session.scalars(
+            select(Agent)
+            .where(Agent.campaign_id == campaign_id)
+            .order_by(Agent.id)
+        ).all()
+        for agent in agents[:8]:
+            agent.last_heartbeat_at = now - timedelta(seconds=16)
+
+    with session_factory.begin() as session:
+        result = run_pacing_tick(
+            session,
+            campaign_id=campaign_id,
+            worker_id="live-rapid-drop-test",
+            now=now,
+            observed_answers=30,
+            observed_attempts=100,
+        )
+        decision = session.scalar(
+            select(SafetyDecision)
+            .where(SafetyDecision.campaign_id == campaign_id)
+            .order_by(SafetyDecision.created_at.desc())
+        )
+
+    assert result.receipt.effective_mode == "progressive"
+    assert "rapid agent availability drop" in result.receipt.reasons
+    assert decision.inputs["rapid_agent_drop"] is True
+    assert decision.inputs["recent_agent_losses"] == 8
+    assert decision.inputs["agent_loss_baseline"] == 20
 
 
 def test_zero_risk_predictive_campaign_allocates_exactly_like_progressive(session_factory) -> None:
@@ -94,9 +179,16 @@ def test_pacing_automatically_uses_persisted_observed_answer_history(session_fac
         )
         session.add(historical_borrower)
         session.flush()
+        history_safety_decision_id = add_approved_safety_decision(
+            session,
+            campaign_id=campaign_id,
+            mode="predictive",
+            approved_calls=40,
+        )
         for index in range(40):
             session.add(CallIntent(
                 campaign_id=campaign_id,
+                safety_decision_id=history_safety_decision_id,
                 borrower_id=historical_borrower.id,
                 mode=IntentMode.PREDICTIVE,
                 state=CallState.COMPLETED,
@@ -133,10 +225,17 @@ def test_inferred_answers_are_a_separate_non_statistical_bucket(session_factory)
         borrower = session.scalar(
             select(Borrower).where(Borrower.campaign_id == campaign_id)
         )
+        history_safety_decision_id = add_approved_safety_decision(
+            session,
+            campaign_id=campaign_id,
+            mode="predictive",
+            approved_calls=30,
+        )
         for index in range(30):
             observation = "observed" if index < 10 else ("inferred" if index < 20 else None)
             session.add(CallIntent(
                 campaign_id=campaign_id,
+                safety_decision_id=history_safety_decision_id,
                 borrower_id=borrower.id,
                 mode=IntentMode.PREDICTIVE,
                 state=CallState.COMPLETED,
@@ -167,8 +266,15 @@ def test_pacing_derives_setup_talk_and_expected_release_from_provider_events(
             .where(Borrower.campaign_id == campaign_id)
             .order_by(Borrower.id)
         ).all()
+        timing_safety_decision_id = add_approved_safety_decision(
+            session,
+            campaign_id=campaign_id,
+            mode="predictive",
+            approved_calls=2,
+        )
         completed = CallIntent(
             campaign_id=campaign_id,
+            safety_decision_id=timing_safety_decision_id,
             borrower_id=borrowers[0].id,
             mode=IntentMode.PREDICTIVE,
             state=CallState.COMPLETED,
@@ -179,6 +285,7 @@ def test_pacing_derives_setup_talk_and_expected_release_from_provider_events(
         )
         active = CallIntent(
             campaign_id=campaign_id,
+            safety_decision_id=timing_safety_decision_id,
             borrower_id=borrowers[1].id,
             mode=IntentMode.PREDICTIVE,
             state=CallState.CONNECTED,

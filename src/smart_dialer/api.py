@@ -48,7 +48,6 @@ class PacingTickRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     agent_data_stale: bool = False
-    rapid_agent_drop: bool = False
 
 
 class ProviderEventCreate(BaseModel):
@@ -204,7 +203,8 @@ def _borrower(r: Borrower) -> dict:
 
 def _intent(r: CallIntent) -> dict:
     return {"id": r.id, "campaign_id": r.campaign_id, "borrower_id": r.borrower_id,
-            "agent_id": r.agent_id, "mode": r.mode, "state": r.state,
+            "agent_id": r.agent_id, "safety_decision_id": r.safety_decision_id,
+            "mode": r.mode, "state": r.state,
             "provider_name": r.provider_name, "processing_attempts": r.processing_attempts,
             "answer_observation": r.answer_observation, "manual_review_reason": r.manual_review_reason}
 

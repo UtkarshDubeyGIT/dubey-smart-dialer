@@ -31,8 +31,11 @@ def test_health_and_end_to_end_progressive_tick(client: TestClient) -> None:
     tick = client.post(f"/v1/campaigns/{campaign_id}/pacing-tick", json={}).json()
 
     assert tick["approved_calls"] == tick["created_intents"] == 1
-    assert client.get("/v1/call-intents").json()[0]["agent_id"] == agent["id"]
-    assert len(client.get("/v1/safety-decisions").json()) == 1
+    intent = client.get("/v1/call-intents").json()[0]
+    decisions = client.get("/v1/safety-decisions").json()
+    assert intent["agent_id"] == agent["id"]
+    assert intent["safety_decision_id"] == decisions[0]["id"]
+    assert decisions[0]["effective_mode"] == "progressive"
 
 
 def test_agent_graceful_state_and_operational_lists(client: TestClient) -> None:
@@ -69,6 +72,19 @@ def test_pacing_api_rejects_caller_supplied_answer_statistics(client: TestClient
     response = client.post(
         f"/v1/campaigns/{campaign_id}/pacing-tick",
         json={"observed_answers": 30, "observed_attempts": 100},
+    )
+
+    assert response.status_code == 422
+
+
+def test_pacing_api_rejects_caller_supplied_rapid_agent_drop(client: TestClient) -> None:
+    campaign_id = client.post(
+        "/v1/campaigns", json={"name": "Server presence", "mode": "predictive"}
+    ).json()["id"]
+
+    response = client.post(
+        f"/v1/campaigns/{campaign_id}/pacing-tick",
+        json={"rapid_agent_drop": True},
     )
 
     assert response.status_code == 422

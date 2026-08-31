@@ -20,6 +20,7 @@ Pacing produces an expected-value proposal. The mandatory Safety Controller uses
 - Operators can choose any stricter value to 0%.
 - 0% produces pure progressive allocation and has unit plus PostgreSQL integration tests.
 - Cold start (under 30 attempts), stale presence, provider degradation, or rapid agent loss forces progressive.
+- Progressive campaigns also pass through the Safety Controller and persist an approved, zero-risk progressive receipt; they do not bypass the authorization boundary.
 - Runtime pacing derives answer history from the latest 200 completed provider calls in PostgreSQL. API and CLI callers cannot inject answer counts. Direct no-answer dispositions count in the denominator; forward-jump inferred answers are reported separately and excluded from both numerator and denominator.
 - Ring-to-answer and answer/connection-to-completion event timestamps provide bounded setup/talk averages. Connected human calls estimated to finish within setup time are exposed to the proposal as expected releases. The Safety Controller still calculates overload risk against currently available humans, so uncertain future releases can make the proposal more ambitious but cannot weaken the final capacity bound.
 
@@ -33,6 +34,7 @@ The 0.5%/1% value is a **per-decision probability**, not cumulative campaign pro
 - Selection uses `SELECT ... FOR UPDATE SKIP LOCKED`.
 - Universal lock order is agent first, borrower second whenever both are needed.
 - One transaction reserves resources and creates the intent.
+- Every `call_intents` row has a schema-enforced `NOT NULL` foreign key to its persisted `safety_decisions` authorization. This is a PostgreSQL invariant, not only a coordinator convention, so direct or future allocation paths cannot commit an intent without a receipt.
 - A pre-commit crash leaves no reservation because PostgreSQL rolls back.
 
 Progressive reserves agent and borrower together. Predictive reserves borrower first and assigns a human on observed `ANSWERED`; pre-reserving one human per predictive call would collapse predictive into progressive.
@@ -57,6 +59,8 @@ The report generator starts ephemeral PostgreSQL and executes worker rollback/re
 
 Workstations heartbeat every 5 seconds. Graceful pause/offline is immediate; silent disappearance is detected at 15 seconds. Ringing cancellation holds ownership for a 10-second reconciliation lease, then force-releases. Call-intent reconciliation precedes heartbeat release, preventing double-release paths.
 
+The live coordinator reaps expired heartbeats before every pacing decision and reads durable `AVAILABLE` departure events from the preceding 30 seconds. It estimates the pre-drop pool as current availability plus recent losses and forces progressive when losses are both at least five humans and at least 20% of that pool. This server-derived signal is recorded in each Safety Decision; API callers cannot inject or suppress it. The deterministic 40-of-100 failure scenario exercises this same production presence, coordinator, and Safety Controller path.
+
 ## Consequences
 
 Advantages:
@@ -71,6 +75,7 @@ Costs and limitations:
 - PostgreSQL is queue, state store, and inbox; connections are the likely first bottleneck.
 - Predictive risk is bounded, not eliminated. True zero-abandonment requires progressive mode, guaranteed overflow, or telecom holding.
 - In-process simulators model external provider idempotency but do not themselves persist across process restart.
+- Event transition coverage is table-driven and includes duplicate/out-of-order PostgreSQL tests, but property-based/Hypothesis event-sequence coverage is not included in this time-boxed prototype.
 - No auth/RBAC. Production needs authentication, roles, PII encryption, calling-window/DND enforcement, metrics, alerts, and retention controls.
 - The initial migration creates v1 metadata; later revisions should use explicit incremental operations.
 

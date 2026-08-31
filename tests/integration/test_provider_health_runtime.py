@@ -18,6 +18,7 @@ from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.providers.registry import BLAND, PLIVO
 from smart_dialer.services.coordinator import run_pacing_tick
 from smart_dialer.worker_loop import run_once
+from tests.integration.support import add_approved_safety_decision
 
 
 pytestmark = pytest.mark.integration
@@ -34,6 +35,12 @@ def seed_reserved_intents(session_factory, *, count: int = 3) -> list[str]:
         )
         session.add(campaign)
         session.flush()
+        safety_decision_id = add_approved_safety_decision(
+            session,
+            campaign_id=campaign.id,
+            mode="predictive",
+            approved_calls=count,
+        )
         for index in range(count):
             borrower = Borrower(
                 campaign_id=campaign.id,
@@ -45,6 +52,7 @@ def seed_reserved_intents(session_factory, *, count: int = 3) -> list[str]:
             session.flush()
             intent = CallIntent(
                 campaign_id=campaign.id,
+                safety_decision_id=safety_decision_id,
                 borrower_id=borrower.id,
                 mode=IntentMode.PREDICTIVE,
                 state=CallState.RESERVED,

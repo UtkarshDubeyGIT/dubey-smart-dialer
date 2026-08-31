@@ -51,7 +51,7 @@ Stop with `docker compose down`. Reset the database too with `make clean`.
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 79 unit + real PostgreSQL integration tests
+make test        # 84 unit + real PostgreSQL integration tests
 make simulate    # pacing + PostgreSQL-executed failure evidence
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make smoke       # fresh Compose build, migration, API, CLI, demo, and worker check
@@ -68,10 +68,10 @@ If Docker points to a stopped context, select a working one first (Docker Deskto
 
 | Question | Implementation | Executable evidence |
 |---|---|---|
-| Can pacing bypass safety? | Pacing proposes only; the coordinator persists a Safety Controller receipt before allocation. | [`test_coordinator.py`](tests/integration/test_coordinator.py) |
+| Can pacing bypass safety? | Pacing proposes only; every call intent has a schema-enforced `NOT NULL` FK to its persisted Safety Controller receipt. | [`test_coordinator.py`](tests/integration/test_coordinator.py), [`test_migration_safety_boundary.py`](tests/integration/test_migration_safety_boundary.py) |
 | Can two workers assign the same human or borrower? | PostgreSQL `SKIP LOCKED`, one transaction, and fixed agent-before-borrower lock order. | [`test_allocation_concurrency.py`](tests/integration/test_allocation_concurrency.py) |
 | Are retries safe after ambiguous provider failures? | Durable leases plus provider-local idempotency reconciliation. | [`test_recovery_and_events.py`](tests/integration/test_recovery_and_events.py) |
-| Are failure claims simulated or executed? | Worker crash, event disorder, circuit recovery, and heartbeat loss run against ephemeral PostgreSQL. | [`test_failure_simulation.py`](tests/integration/test_failure_simulation.py) |
+| Are failure claims simulated or executed? | Worker crash, event disorder, circuit recovery, and heartbeat loss run against ephemeral PostgreSQL; live pacing derives rapid loss from persisted presence transitions. | [`test_failure_simulation.py`](tests/integration/test_failure_simulation.py) |
 | Does the packaged application actually start? | CI builds the image, applies migrations, probes the API, runs the demo, checks the CLI and worker, then cleans up. | [`compose-smoke.sh`](scripts/compose-smoke.sh) |
 
 The deliberate tradeoff is a PostgreSQL-backed modular monolith: fewer moving parts and stronger transactional reasoning for the prototype, at the cost of eventually needing worker partitioning and a production connection strategy at larger scale. Statistical conservatism can reduce utilization, but it keeps the safety decision explainable and operator-bounded.
@@ -114,7 +114,7 @@ flowchart LR
     State --> Human[Human Agent Bridge]
 ```
 
-The pacing engine has no allocator/provider dependency. Only a persisted Safety Controller decision authorizes allocation.
+The pacing engine has no allocator/provider dependency. Only a persisted Safety Controller decision authorizes allocation, and PostgreSQL rejects any call intent without that receipt.
 
 Full diagrams: [architecture](docs/architecture.md), [agent state](docs/agent-state-machine.md), [call state](docs/call-state-machine.md).
 

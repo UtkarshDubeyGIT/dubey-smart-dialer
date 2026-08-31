@@ -93,6 +93,15 @@ class CallIntent(Base):
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
     campaign_id: Mapped[str] = mapped_column(ForeignKey("campaigns.id", ondelete="CASCADE"), index=True)
+    safety_decision_id: Mapped[str] = mapped_column(
+        ForeignKey(
+            "safety_decisions.id",
+            name="fk_call_intents_safety_decision_id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+        index=True,
+    )
     borrower_id: Mapped[str] = mapped_column(ForeignKey("borrowers.id", ondelete="RESTRICT"), index=True)
     agent_id: Mapped[str | None] = mapped_column(ForeignKey("agents.id", ondelete="RESTRICT"), index=True)
     mode: Mapped[IntentMode] = mapped_column(
@@ -117,6 +126,7 @@ class CallIntent(Base):
 
     agent: Mapped[Agent | None] = relationship()
     borrower: Mapped[Borrower] = relationship()
+    safety_decision: Mapped["SafetyDecision"] = relationship()
 
     __table_args__ = (
         Index("ix_call_intents_claim", "state", "lease_expires_at", "created_at"),
@@ -172,6 +182,33 @@ class SafetyDecision(Base):
     inputs: Mapped[dict] = mapped_column(JSON, nullable=False)
     reasons: Mapped[list] = mapped_column(JSON, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class AgentPresenceEvent(Base):
+    """Durable evidence of human capacity leaving the available pool."""
+
+    __tablename__ = "agent_presence_events"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
+    campaign_id: Mapped[str] = mapped_column(
+        ForeignKey("campaigns.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    agent_id: Mapped[str] = mapped_column(
+        ForeignKey("agents.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    previous_state: Mapped[str] = mapped_column(String(20), nullable=False)
+    target_state: Mapped[str] = mapped_column(String(20), nullable=False)
+    path: Mapped[str] = mapped_column(String(20), nullable=False)
+    occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+    __table_args__ = (
+        Index(
+            "ix_agent_presence_events_rapid_drop",
+            "campaign_id",
+            "previous_state",
+            "occurred_at",
+        ),
+    )
 
 
 class Incident(Base):

@@ -225,9 +225,23 @@ def seed_demo(ctx: typer.Context) -> None:
         )
         session.add(historical_borrower)
         session.flush()
+        history_safety_decision = SafetyDecision(
+            campaign_id=campaign.id,
+            requested_calls=40,
+            approved_calls=40,
+            decision="approved",
+            effective_mode="predictive",
+            effective_risk=0.005,
+            overload_probability=0.0,
+            inputs={"source": "seeded_historical_demo"},
+            reasons=["historical demonstration data"],
+        )
+        session.add(history_safety_decision)
+        session.flush()
         for index in range(40):
             historical_intent = CallIntent(
                 campaign_id=campaign.id,
+                safety_decision_id=history_safety_decision.id,
                 borrower_id=historical_borrower.id,
                 mode=IntentMode.PREDICTIVE,
                 state=CallState.COMPLETED,

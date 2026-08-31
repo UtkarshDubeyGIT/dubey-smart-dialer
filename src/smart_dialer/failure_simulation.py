@@ -10,6 +10,7 @@ from smart_dialer.db.models import (
     Campaign,
     ProviderEvent,
     ProviderHealth,
+    SafetyDecision,
 )
 from smart_dialer.domain.states import AgentState, CallState
 from smart_dialer.providers.mocks import BlandMockProvider, PlivoMockProvider
@@ -24,6 +25,30 @@ from smart_dialer.worker_loop import run_once
 
 
 EVIDENCE_SOURCE = "executed_postgresql_production_path"
+
+
+def _failure_fixture_authorization(
+    session: Session,
+    *,
+    campaign_id: str,
+    mode: str,
+    approved_calls: int,
+) -> str:
+    """Persist explicit authorization for a non-pacing failure fixture."""
+    decision = SafetyDecision(
+        campaign_id=campaign_id,
+        requested_calls=approved_calls,
+        approved_calls=approved_calls,
+        decision="approved",
+        effective_mode=mode,
+        effective_risk=0.0 if mode == "progressive" else 0.005,
+        overload_probability=0.0,
+        inputs={"source": "failure_simulation_fixture"},
+        reasons=["fixture isolates post-authorization failure handling"],
+    )
+    session.add(decision)
+    session.flush()
+    return decision.id
 
 
 def run_failure_scenarios(
@@ -65,9 +90,16 @@ def _worker_crash(factory: sessionmaker[Session], *, seed: int) -> dict:
             language="en-IN",
         ))
         session.flush()
+        safety_decision_id = _failure_fixture_authorization(
+            session,
+            campaign_id=campaign.id,
+            mode="progressive",
+            approved_calls=1,
+        )
         reserve_progressive_pair(
             session,
             campaign_id=campaign.id,
+            safety_decision_id=safety_decision_id,
             worker_id="failure-simulator",
             now=now,
         )
@@ -134,9 +166,16 @@ def _provider_event_disorder(
         )
         session.add(borrower)
         session.flush()
+        safety_decision_id = _failure_fixture_authorization(
+            session,
+            campaign_id=campaign.id,
+            mode="predictive",
+            approved_calls=1,
+        )
         intent = reserve_predictive_borrower(
             session,
             campaign_id=campaign.id,
+            safety_decision_id=safety_decision_id,
             worker_id="failure-simulator",
             now=now,
         )
@@ -195,6 +234,12 @@ def _provider_outage(factory: sessionmaker[Session]) -> dict:
         )
         session.add(campaign)
         session.flush()
+        safety_decision_id = _failure_fixture_authorization(
+            session,
+            campaign_id=campaign.id,
+            mode="predictive",
+            approved_calls=4,
+        )
         intent_ids: list[str] = []
         for index in range(4):
             borrower = Borrower(
@@ -208,6 +253,7 @@ def _provider_outage(factory: sessionmaker[Session]) -> dict:
             intent = reserve_predictive_borrower(
                 session,
                 campaign_id=campaign.id,
+                safety_decision_id=safety_decision_id,
                 worker_id="failure-simulator",
                 now=datetime.now(UTC),
             )
@@ -300,7 +346,6 @@ def _agent_drop(factory: sessionmaker[Session]) -> dict:
             now=now,
             observed_answers=50,
             observed_attempts=100,
-            rapid_agent_drop=True,
         )
 
     return {

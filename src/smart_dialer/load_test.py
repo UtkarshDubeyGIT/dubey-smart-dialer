@@ -13,10 +13,12 @@ from sqlalchemy.orm import Session, sessionmaker
 from testcontainers.community.postgres import PostgresContainer
 
 from smart_dialer.db.base import Base
-from smart_dialer.db.models import Agent, Borrower, Campaign
+from smart_dialer.db.models import Agent, Borrower, Campaign, SafetyDecision
+from smart_dialer.domain.pacing import PacingProposal, SafetyContext
 from smart_dialer.domain.states import AgentState
 from smart_dialer.services.allocation import reserve_progressive_pair
 from smart_dialer.services.presence import reap_silent_agents
+from smart_dialer.services.safety import SafetyController
 
 
 SEED = 2026
@@ -48,7 +50,7 @@ class PoolMeter:
             self.current -= 1
 
 
-def seed_scale(factory, scale: int) -> str:
+def seed_scale(factory, scale: int) -> tuple[str, str]:
     now = datetime(2026, 8, 31, 12, 0, tzinfo=UTC)
     with factory.begin() as session:
         campaign = Campaign(name=f"load-{scale}", mode="progressive", language="en-IN")
@@ -61,7 +63,30 @@ def seed_scale(factory, scale: int) -> str:
             "campaign_id": campaign.id, "external_id": f"borrower-{i}",
             "phone": f"+919{SEED:04d}{i:05d}", "language": "en-IN",
         } for i in range(scale * 2)])
-        return campaign.id
+        approved_calls = min(scale, 1000)
+        receipt = SafetyController().evaluate(
+            PacingProposal(approved_calls, "load-test progressive authorization"),
+            SafetyContext(
+                available_agents=scale,
+                observed_answers=0,
+                observed_attempts=0,
+                requested_risk=0.0,
+            ),
+        )
+        decision = SafetyDecision(
+            campaign_id=campaign.id,
+            requested_calls=receipt.requested_calls,
+            approved_calls=receipt.approved_calls,
+            decision=receipt.decision,
+            effective_mode=receipt.effective_mode,
+            effective_risk=receipt.effective_risk,
+            overload_probability=receipt.overload_probability,
+            inputs={"source": "load_test", "scale": scale},
+            reasons=list(receipt.reasons),
+        )
+        session.add(decision)
+        session.flush()
+        return campaign.id, decision.id
 
 
 def run_scale(url: str, scale: int) -> dict:
@@ -70,7 +95,7 @@ def run_scale(url: str, scale: int) -> dict:
     meter = PoolMeter(engine, 32)
     Base.metadata.drop_all(engine); Base.metadata.create_all(engine)
     factory = sessionmaker(bind=engine, expire_on_commit=False)
-    campaign_id = seed_scale(factory, scale)
+    campaign_id, safety_decision_id = seed_scale(factory, scale)
     target = min(scale, 1000)
     workers = min(32, target)
     barrier = threading.Barrier(workers)
@@ -91,7 +116,9 @@ def run_scale(url: str, scale: int) -> dict:
             started = time.perf_counter()
             with factory.begin() as session:
                 intent = reserve_progressive_pair(
-                    session, campaign_id=campaign_id, worker_id=f"load-{worker}",
+                    session, campaign_id=campaign_id,
+                    safety_decision_id=safety_decision_id,
+                    worker_id=f"load-{worker}",
                     now=datetime(2026, 8, 31, 12, 0, tzinfo=UTC),
                 )
                 if intent is not None:
@@ -115,7 +142,7 @@ def run_scale(url: str, scale: int) -> dict:
     # Separate 40% sudden-drop campaign. Virtual disappearance at T; reaping at
     # T+15s empirically validates the configured bound while wall time measures DB work.
     Base.metadata.drop_all(engine); Base.metadata.create_all(engine)
-    drop_campaign = seed_scale(factory, scale)
+    drop_campaign, _ = seed_scale(factory, scale)
     virtual_now = datetime(2026, 8, 31, 12, 0, 15, tzinfo=UTC)
     with factory.begin() as session:
         session.execute(

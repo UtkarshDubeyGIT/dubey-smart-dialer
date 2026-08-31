@@ -8,11 +8,12 @@ from sqlalchemy import select
 from smart_dialer.db.models import Agent, Borrower, CallIntent, Campaign
 from smart_dialer.domain.states import AgentState
 from smart_dialer.services.allocation import reserve_progressive_pair
+from tests.integration.support import add_approved_safety_decision
 
 pytestmark = pytest.mark.integration
 
 
-def seed_campaign(session_factory, *, pairs: int) -> str:
+def seed_campaign(session_factory, *, pairs: int) -> tuple[str, str]:
     with session_factory.begin() as session:
         campaign = Campaign(name="collections", mode="progressive", language="en-IN")
         session.add(campaign)
@@ -36,12 +37,18 @@ def seed_campaign(session_factory, *, pairs: int) -> str:
                     language="en-IN",
                 )
             )
-        return campaign.id
+        safety_decision_id = add_approved_safety_decision(
+            session,
+            campaign_id=campaign.id,
+            mode="progressive",
+            approved_calls=pairs,
+        )
+        return campaign.id, safety_decision_id
 
 
 def test_concurrent_workers_allocate_each_pair_at_most_once(session_factory) -> None:
     worker_count = 8
-    campaign_id = seed_campaign(session_factory, pairs=worker_count)
+    campaign_id, safety_decision_id = seed_campaign(session_factory, pairs=worker_count)
     start = Barrier(worker_count)
 
     def allocate(worker_number: int) -> tuple[str, str] | None:
@@ -50,6 +57,7 @@ def test_concurrent_workers_allocate_each_pair_at_most_once(session_factory) -> 
             intent = reserve_progressive_pair(
                 session,
                 campaign_id=campaign_id,
+                safety_decision_id=safety_decision_id,
                 worker_id=f"worker-{worker_number}",
                 now=datetime.now(UTC),
             )
@@ -66,7 +74,7 @@ def test_concurrent_workers_allocate_each_pair_at_most_once(session_factory) -> 
 
 def test_only_one_worker_can_claim_a_single_pair(session_factory) -> None:
     worker_count = 6
-    campaign_id = seed_campaign(session_factory, pairs=1)
+    campaign_id, safety_decision_id = seed_campaign(session_factory, pairs=1)
     start = Barrier(worker_count)
 
     def allocate(worker_number: int) -> str | None:
@@ -75,6 +83,7 @@ def test_only_one_worker_can_claim_a_single_pair(session_factory) -> None:
             intent = reserve_progressive_pair(
                 session,
                 campaign_id=campaign_id,
+                safety_decision_id=safety_decision_id,
                 worker_id=f"worker-{worker_number}",
                 now=datetime.now(UTC),
             )
@@ -87,7 +96,7 @@ def test_only_one_worker_can_claim_a_single_pair(session_factory) -> None:
 
 
 def test_locked_agent_is_skipped_instead_of_blocking(session_factory) -> None:
-    campaign_id = seed_campaign(session_factory, pairs=2)
+    campaign_id, safety_decision_id = seed_campaign(session_factory, pairs=2)
 
     with session_factory() as locking_session:
         locking_session.begin()
@@ -104,6 +113,7 @@ def test_locked_agent_is_skipped_instead_of_blocking(session_factory) -> None:
             intent = reserve_progressive_pair(
                 allocating_session,
                 campaign_id=campaign_id,
+                safety_decision_id=safety_decision_id,
                 worker_id="worker-skip",
                 now=datetime.now(UTC),
             )
@@ -113,13 +123,14 @@ def test_locked_agent_is_skipped_instead_of_blocking(session_factory) -> None:
 
 
 def test_worker_crash_before_commit_leaves_no_reservation(session_factory) -> None:
-    campaign_id = seed_campaign(session_factory, pairs=1)
+    campaign_id, safety_decision_id = seed_campaign(session_factory, pairs=1)
 
     with pytest.raises(RuntimeError, match="simulated crash"):
         with session_factory.begin() as session:
             assert reserve_progressive_pair(
                 session,
                 campaign_id=campaign_id,
+                safety_decision_id=safety_decision_id,
                 worker_id="crashing-worker",
                 now=datetime.now(UTC),
             )

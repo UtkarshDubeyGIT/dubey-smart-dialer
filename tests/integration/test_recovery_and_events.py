@@ -10,6 +10,7 @@ from smart_dialer.services.allocation import reserve_progressive_pair
 from smart_dialer.services.events import ingest_provider_event
 from smart_dialer.services.campaign_statistics import load_answer_history
 from smart_dialer.services.recovery import claim_next_intent, fail_poison_intent
+from tests.integration.support import add_approved_safety_decision
 
 pytestmark = pytest.mark.integration
 
@@ -35,9 +36,13 @@ def seed_campaign(session_factory, *, pairs: int) -> str:
 def create_intent(session_factory) -> str:
     campaign_id = seed_campaign(session_factory, pairs=1)
     with session_factory.begin() as session:
+        safety_decision_id = add_approved_safety_decision(
+            session, campaign_id=campaign_id, mode="progressive", approved_calls=1
+        )
         intent = reserve_progressive_pair(
             session,
             campaign_id=campaign_id,
+            safety_decision_id=safety_decision_id,
             worker_id="allocator",
             now=datetime.now(UTC),
         )
