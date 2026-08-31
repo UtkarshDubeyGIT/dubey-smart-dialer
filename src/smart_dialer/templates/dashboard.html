@@ -3,225 +3,170 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fffdfb">
-  <meta name="description" content="A safety-first predictive dialer control room for human collections teams.">
-  <meta http-equiv="refresh" content="15">
-  <title>SmartDialer Control Room · CredResolve</title>
-  <link rel="stylesheet" href="/static/dashboard.css">
+  <meta name="theme-color" content="#fffaf6">
+  <meta name="description" content="A graduate AI/ML systems assignment: confidence-bounded predictive dialing for human collections teams.">
+  <meta property="og:title" content="CredResolve SmartDialer · Live AI/ML systems demo">
+  <meta property="og:description" content="See the production pacing engine and mandatory Safety Controller make an explainable decision in real time.">
+  <title>Live AI/ML SmartDialer · CredResolve</title>
+  <link rel="stylesheet" href="/static/dashboard.css?v=2">
+  <script src="/static/dashboard.js?v=2" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#dashboard-content">Skip to dashboard</a>
-  <div class="ambient-grid" aria-hidden="true"></div>
-  <main class="shell" id="dashboard-content">
+  <a class="skip-link" href="#main-content">Skip to the live demo</a>
+  <div class="ambient-field" aria-hidden="true"></div>
+
+  <main class="shell" id="main-content">
     <header class="topbar">
-      <a class="brand" href="/dashboard" aria-label="CredResolve SmartDialer dashboard">
+      <a class="brand" href="/dashboard" aria-label="CredResolve SmartDialer home">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
-        <span class="brand-copy">
-          <strong>CredResolve</strong>
-          <small>Dialer operations</small>
-        </span>
+        <span class="brand-copy"><strong>CredResolve</strong><small>SmartDialer lab</small></span>
       </a>
+      <nav class="page-nav" aria-label="Dashboard sections">
+        <a href="#decision-lab">Live lab</a>
+        <a href="#architecture">How it works</a>
+        <a href="#operations">System evidence</a>
+      </nav>
       <div class="topbar-actions">
-        <span class="live-status"><i></i> System telemetry live</span>
-        <a class="quiet-link" href="/docs">Open API docs <span>↗</span></a>
+        <span class="live-status"><i></i> Production demo</span>
+        <a class="api-link" href="/docs">API docs <span>↗</span></a>
       </div>
     </header>
 
-    <section class="intro" aria-labelledby="page-title">
-      <div class="intro-copy">
-        <p class="identity-pill"><span>Human-led</span> collections infrastructure</p>
-        <h1 id="page-title">Every call.<br><span>One safety curve.</span></h1>
-        <p class="intro-description">Live capacity, explainable pacing, and durable call evidence—built around human agents.</p>
-        <div class="intro-signals" aria-label="Prototype boundaries">
-          <span><i class="signal-green"></i>PostgreSQL source of truth</span>
-          <span><i class="signal-orange"></i>Mock telecom only</span>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="course-label"><span>Graduate AI/ML</span> systems assignment</p>
+        <h1 id="page-title"><span class="sr-only">Watch the dialer decide.</span><span aria-hidden="true">Watch the dialer <em>decide.</em></span></h1>
+        <p class="hero-lede">A safety-first predictive dialer for human agents. It estimates how many borrowers to call, quantifies uncertainty, and refuses capacity risk it cannot explain.</p>
+        <div class="hero-actions">
+          <button class="primary-action" type="button" data-run-demo>Run the live decision</button>
+          <a class="text-action" href="#architecture">Read the design logic <span>↓</span></a>
         </div>
+        <dl class="hero-facts">
+          <div><dt>Model</dt><dd>Wilson + binomial tail</dd></div>
+          <div><dt>Safety budget</dt><dd>0.5% per decision</dd></div>
+          <div><dt>Telecom</dt><dd>Deterministic mocks</dd></div>
+        </dl>
       </div>
-      <div class="identity-stage" aria-hidden="true">
-        <div class="identity-orb"><i></i><i></i><i></i></div>
-        <span class="floating-signal signal-a"><i></i>Live pacing curve</span>
-        <span class="floating-signal signal-b"><i></i>Human capacity</span>
-        <span class="floating-signal signal-c"><i></i>Receipt linked</span>
-        <div class="intro-note">
-          <span>Last synchronized</span>
-          <strong>{{ generated_at.strftime('%H:%M:%S') }} UTC</strong>
-          <small>Refreshes every 15 seconds</small>
+
+      <article class="decision-lab" id="decision-lab" data-decision-lab data-state="loading" aria-labelledby="lab-title">
+        <header class="lab-header">
+          <div><p class="eyebrow">Live production code · no calls created</p><h2 id="lab-title">Decision Lab</h2></div>
+          <span class="engine-badge"><i></i> API connected</span>
+        </header>
+        <div class="scenario-switcher" aria-label="Decision scenarios">
+          <button class="active" type="button" data-scenario="steady" aria-pressed="true">Steady state</button>
+          <button type="button" data-scenario="cold" aria-pressed="false">Cold start</button>
+          <button type="button" data-scenario="drop" aria-pressed="false">Agent drop</button>
+          <button type="button" data-scenario="degraded" aria-pressed="false">Provider failure</button>
         </div>
+        <div class="decision-stage" aria-live="polite">
+          <div class="stage-node proposal-node"><span>Pacing proposal</span><strong data-output="proposal">—</strong><small>candidate calls</small></div>
+          <div class="particle-track" aria-hidden="true"><span>proposal only</span><div data-particle-stream></div></div>
+          <div class="safety-gate"><span class="gate-ring"><i></i></span><div><small>Mandatory gate</small><strong data-output="decision">Evaluating</strong></div></div>
+          <div class="particle-track outgoing" aria-hidden="true"><span>receipt attached</span></div>
+          <div class="stage-node approved-node"><span>Authorized</span><strong data-output="approved">—</strong><small>durable intents</small></div>
+        </div>
+        <div class="lab-readout">
+          <div class="mode-readout"><span>Effective mode</span><strong data-output="mode">—</strong></div>
+          <div><span>Observed answers</span><strong data-output="observed">—</strong></div>
+          <div><span>Wilson upper bound</span><strong data-output="wilson">—</strong></div>
+          <div><span>Overload probability</span><strong data-output="overload">—</strong></div>
+        </div>
+        <div class="lab-explanation">
+          <p data-output="summary">Connecting to the production decision endpoint…</p>
+          <small><span>Why</span> <b data-output="reason">Loading evidence</b></small>
+        </div>
+        <div class="lab-controls">
+          <label><span>Available humans <output data-output="agents-input">10</output></span><input data-input="agents" type="range" min="1" max="20" value="10"></label>
+          <label><span>Observed answer rate <output data-output="answer-input">30%</output></span><input data-input="answer-rate" type="range" min="5" max="75" value="30"></label>
+          <label><span>Risk tolerance <output data-output="risk-input">0.50%</output></span><input data-input="risk" type="range" min="0" max="10" step="0.5" value="5"></label>
+        </div>
+        <p class="lab-footnote">The browser calls <code>GET /v1/demo/pacing-decision</code>. That endpoint invokes <code>PredictivePacingEngine</code> and <code>SafetyController</code> directly—there is no frontend-only safety formula.</p>
+      </article>
+    </section>
+
+    <section class="proof-rail" aria-label="Implementation proof">
+      <div><strong>95%</strong><span>one-sided confidence</span></div>
+      <div><strong>1%</strong><span>absolute risk ceiling</span></div>
+      <div><strong>30</strong><span>samples before prediction</span></div>
+      <div><strong>3×</strong><span>maximum intent attempts</span></div>
+      <div><strong>0</strong><span>real telecom calls</span></div>
+    </section>
+
+    <section class="problem-section" aria-labelledby="problem-title">
+      <div class="section-intro">
+        <p class="section-index">The problem</p>
+        <h2 id="problem-title">Predictive speed can strand a borrower without a human.</h2>
+        <p>Calling too slowly wastes agent time. Calling too aggressively means more borrowers answer than humans can serve. This prototype treats that overload probability as an explicit, operator-owned constraint.</p>
+      </div>
+      <div class="capacity-illustration" aria-label="The dialer balances answered calls against human capacity">
+        <div class="call-cloud"><span class="cloud-label">Borrower answers are uncertain</span>{% for item in range(18) %}<i style="--item: {{ item }}"></i>{% endfor %}</div>
+        <div class="curve-line"><span>confidence-bounded gate</span></div>
+        <div class="human-bank"><span class="bank-label">Human capacity is finite</span>{% for item in range(8) %}<i><b></b></i>{% endfor %}</div>
       </div>
     </section>
 
-    {% if not campaigns %}
-    <section class="empty-state">
-      <div class="empty-orbit" aria-hidden="true"><span></span></div>
-      <div>
-        <p class="eyebrow">Control room ready</p>
-        <h2>No campaigns yet</h2>
-        <p>Create a campaign with the CLI or REST API, add human agents and borrowers, then run one pacing tick. Live operational evidence will appear here.</p>
-        <p class="empty-signal"><span></span> Safety pulse awaiting first receipt</p>
-        <div class="empty-actions">
-          <a class="primary-link" href="/docs">Open API workspace →</a>
-          <code>smart-dialer seed-demo</code>
-        </div>
+    <section class="architecture-section" id="architecture" aria-labelledby="architecture-title">
+      <div class="section-intro wide">
+        <p class="section-index">How the intelligence works</p>
+        <h2 id="architecture-title">Prediction proposes. Safety permits. PostgreSQL commits.</h2>
+        <p>This is an applied AI/ML systems assignment, not a chatbot. The intelligence is a conservative statistical control policy operating under uncertain answer behavior and changing human capacity.</p>
       </div>
-    </section>
-    {% else %}
-    <section class="metric-rail" aria-label="System summary">
-      <article class="metric accent">
-        <span>Campaigns</span>
-        <strong>{{ metrics.campaigns }}</strong>
-        <small>{{ campaigns[0].mode }} pacing active</small>
-      </article>
-      <article class="metric">
-        <span>Humans available</span>
-        <strong>{{ metrics.available_agents }}<em>/{{ metrics.total_agents }}</em></strong>
-        <small>Heartbeat-qualified capacity</small>
-      </article>
-      <article class="metric">
-        <span>Calls in flight</span>
-        <strong>{{ metrics.active_calls }}</strong>
-        <small>{{ metrics.queued_borrowers }} borrowers queued</small>
-      </article>
-      <article class="metric {% if metrics.manual_review %}warning{% endif %}">
-        <span>Manual review</span>
-        <strong>{{ metrics.manual_review }}</strong>
-        <small>{% if metrics.manual_review %}Human attention required{% else %}No unresolved exceptions{% endif %}</small>
-      </article>
+      <div class="architecture-flow">
+        <article><span class="flow-number">01</span><p class="eyebrow">Estimate demand</p><h3>Expected-value pacing</h3><p>Observed answers, ringing calls, setup time, and near-term agent releases produce a candidate batch.</p><code>ceil(unfilled_capacity / answer_rate)</code></article>
+        <i class="flow-arrow" aria-hidden="true">→</i>
+        <article class="flow-focus"><span class="flow-number">02</span><p class="eyebrow">Bound uncertainty</p><h3>Wilson upper confidence</h3><p>The controller assumes a more conservative answer probability than the raw mean.</p><code>p̂ → one-sided 95% upper bound</code></article>
+        <i class="flow-arrow" aria-hidden="true">→</i>
+        <article><span class="flow-number">03</span><p class="eyebrow">Search safe batch</p><h3>Exact binomial tail</h3><p>Binary search finds the largest batch whose chance of exceeding capacity remains within policy.</p><code>P(answered &gt; humans) ≤ 0.5%</code></article>
+        <i class="flow-arrow" aria-hidden="true">→</i>
+        <article><span class="flow-number">04</span><p class="eyebrow">Persist permission</p><h3>Schema-linked receipt</h3><p>Every call intent must reference a persisted safety decision. PostgreSQL rejects bypasses.</p><code>call_intent.safety_decision_id NOT NULL</code></article>
+      </div>
+      <div class="fallback-line"><strong>Known uncertainty?</strong><span>Cold data</span><i></i><span>Stale presence</span><i></i><span>Rapid agent loss</span><i></i><span>Provider degradation</span><b>→ progressive mode</b></div>
     </section>
 
-    <section class="primary-grid">
-      <article class="panel safety-panel">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Live pacing curve</p>
-            <h2>Safety pulse</h2>
-          </div>
-          {% if safety %}<span class="receipt-id">Receipt {{ safety.id }}</span>{% endif %}
-        </div>
-        {% if safety %}
-        <div class="safety-core">
-          <div class="decision-orbit {{ safety.decision }}">
-            <div>
-              <strong>{{ safety.approved }}</strong>
-              <span>of {{ safety.requested }}</span>
-            </div>
-          </div>
-          <div class="safety-copy">
-            <span class="status-chip {{ safety.decision }}">{{ safety.decision_label }}</span>
-            <h3>{{ safety.mode }} permission</h3>
-            <p>{{ safety.campaign }}</p>
-            <dl>
-              <div><dt>Risk ceiling</dt><dd>{{ '%.3f'|format(safety.risk_percent) }}%</dd></div>
-              <div><dt>Calculated overload</dt><dd>{{ '%.4f'|format(safety.overload_percent) }}%</dd></div>
-            </dl>
-          </div>
-        </div>
-        <div class="reason-line">
-          <span>Why</span>
-          <p>{% if safety.reasons %}{{ safety.reasons|join(' · ') }}{% else %}Within confidence-bounded capacity{% endif %}</p>
-        </div>
-        {% else %}
-        <div class="panel-empty">Run a pacing tick to generate the first immutable authorization receipt.</div>
-        {% endif %}
-      </article>
+    <section class="operations-section" id="operations" aria-labelledby="operations-title">
+      <div class="operations-heading">
+        <div><p class="section-index">Running system evidence</p><h2 id="operations-title">The implementation, alive.</h2><p>These are current PostgreSQL records from the deployed application—not a marketing mockup.</p></div>
+        <div class="sync-card"><i></i><span>Last database read</span><strong>{{ generated_at.strftime('%H:%M:%S') }} UTC</strong><button type="button" data-refresh-page>Refresh evidence</button></div>
+      </div>
 
-      <article class="panel capacity-panel">
-        <div class="panel-head">
-          <div><p class="eyebrow">Human capacity</p><h2>Agent presence</h2></div>
-          <span class="panel-meta">5s heartbeat · 15s timeout</span>
-        </div>
-        <div class="capacity-bar" aria-label="Agent state distribution">
-          {% for state in agent_states %}
-          <span class="state-{{ state.key }}" style="width: {{ state.percent }}%" title="{{ state.label }}: {{ state.count }}"></span>
-          {% endfor %}
-        </div>
-        <div class="state-legend">
-          {% for state in agent_states %}
-          <span><i class="state-{{ state.key }}"></i>{{ state.label }} <strong>{{ state.count }}</strong></span>
-          {% endfor %}
-        </div>
-        <div class="agent-list">
-          {% for agent in agents %}
-          <div class="agent-row">
-            <span class="avatar">{{ agent.name[0] }}</span>
-            <div><strong>{{ agent.name }}</strong><small>{{ agent.campaign }}</small></div>
-            <span class="agent-state state-text-{{ agent.state }}">{{ agent.state_label }}</span>
-            <span class="heartbeat">{% if agent.heartbeat is not none %}{{ agent.heartbeat }}s ago{% else %}No pulse{% endif %}</span>
-          </div>
-          {% endfor %}
-        </div>
-      </article>
-    </section>
-
-    <section class="operations-grid">
-      <article class="panel calls-panel">
-        <div class="panel-head">
-          <div><p class="eyebrow">Durable workflow</p><h2>Recent call intents</h2></div>
-          <span class="panel-meta">Every row carries a safety receipt</span>
-        </div>
-        {% if calls %}
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Call</th><th>Borrower / campaign</th><th>Human</th><th>Provider</th><th>State</th><th>Safety</th></tr></thead>
-            <tbody>
-              {% for call in calls %}
-              <tr>
-                <td><code>{{ call.id }}</code><small>{{ call.mode }}</small></td>
-                <td><strong>{{ call.borrower }}</strong><small>{{ call.campaign }}</small></td>
-                <td>{{ call.agent }}</td>
-                <td>{{ call.provider }}</td>
-                <td><span class="call-state state-text-{{ call.state }}">{{ call.state_label }}</span></td>
-                <td><code class="receipt-code">{{ call.safety_id }}</code></td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}<div class="panel-empty">Approved call intents will appear here.</div>{% endif %}
-      </article>
-
-      <aside class="side-stack">
-        <article class="panel compact-panel">
-          <div class="panel-head"><div><p class="eyebrow">Telecom simulation</p><h2>Provider health</h2></div></div>
-          {% if providers %}
-          <div class="provider-list">
-            {% for provider in providers %}
-            <div>
-              <span class="provider-mark">{{ provider.name[0] }}</span>
-              <p><strong>{{ provider.name }}</strong><small>{{ provider.attempts }} recent attempts · {{ provider.failure_rate }}% failed</small></p>
-              <span class="health {{ provider.state }}"><i></i>{{ provider.state_label }}</span>
-            </div>
-            {% endfor %}
-          </div>
-          {% else %}<div class="panel-empty">Provider telemetry starts with the first campaign.</div>{% endif %}
+      {% if not campaigns %}
+      <section class="empty-state"><div class="empty-orbit" aria-hidden="true"><span></span></div><div><p class="eyebrow">Control room ready</p><h2>No campaigns yet</h2><p>Run <code>smart-dialer seed-demo</code> locally to create synthetic humans, borrowers, safety receipts, and provider events.</p><p class="empty-evidence"><strong>Safety pulse</strong> awaiting the first persisted receipt.</p></div></section>
+      {% else %}
+      <div class="metric-rail" aria-label="System summary">
+        <article><span>Campaigns</span><strong>{{ metrics.campaigns }}</strong><small>{{ campaigns[0].mode }} policy</small></article>
+        <article><span>Human capacity now</span><strong>{{ metrics.available_agents }}<em>/{{ metrics.total_agents }}</em></strong><small>5s heartbeat · 15s timeout</small></article>
+        <article><span>Calls in flight</span><strong>{{ metrics.active_calls }}</strong><small>{{ metrics.queued_borrowers }} borrowers queued</small></article>
+        <article class="{% if metrics.manual_review %}warning{% endif %}"><span>Manual review</span><strong>{{ metrics.manual_review }}</strong><small>{% if metrics.manual_review %}Human attention required{% else %}No unresolved exceptions{% endif %}</small></article>
+      </div>
+      <div class="evidence-grid">
+        <article class="panel safety-panel">
+          <div class="panel-head"><div><p class="eyebrow">Latest immutable authorization</p><h2>Safety pulse</h2></div>{% if safety %}<code>{{ safety.id }}</code>{% endif %}</div>
+          {% if safety %}<div class="receipt-visual"><div class="receipt-orbit {{ safety.decision }}"><span><strong>{{ safety.approved }}</strong><small>of {{ safety.requested }}</small></span></div><div class="receipt-copy"><span class="status-chip {{ safety.decision }}">{{ safety.decision_label }}</span><h3>{{ safety.mode }} permission</h3><p>{{ safety.campaign }}</p><dl><div><dt>Risk ceiling</dt><dd>{{ '%.3f'|format(safety.risk_percent) }}%</dd></div><div><dt>Calculated overload</dt><dd>{{ '%.4f'|format(safety.overload_percent) }}%</dd></div></dl></div></div><p class="reason-row"><span>Reason</span>{% if safety.reasons %}{{ safety.reasons|join(' · ') }}{% else %}Within confidence-bounded capacity{% endif %}</p>{% else %}<div class="panel-empty">Run a pacing tick to generate the first safety receipt.</div>{% endif %}
         </article>
-
-        <article class="panel compact-panel">
-          <div class="panel-head"><div><p class="eyebrow">Exception path</p><h2>Incidents</h2></div><span class="count-badge">{{ incidents|length }}</span></div>
-          {% if incidents %}
-          <div class="incident-list">
-            {% for incident in incidents %}
-            <div><i></i><p><strong>{{ incident.kind }}</strong><small>Call {{ incident.call_id }} · {{ incident.status }}</small></p></div>
-            {% endfor %}
-          </div>
-          {% else %}<div class="clear-state"><span>✓</span><p><strong>Quiet system</strong><small>No incidents require attention.</small></p></div>{% endif %}
+        <article class="panel capacity-panel">
+          <div class="panel-head"><div><p class="eyebrow">Live human presence</p><h2>Agent capacity</h2></div><span class="panel-note">Silent loss bounded at 15s</span></div>
+          <div class="capacity-bar" aria-label="Agent state distribution">{% for state in agent_states %}<span class="state-{{ state.key }}" style="--state-width: {{ state.percent }}%" title="{{ state.label }}: {{ state.count }}"></span>{% endfor %}</div>
+          <div class="state-legend">{% for state in agent_states %}<span><i class="state-{{ state.key }}"></i>{{ state.label }} <strong>{{ state.count }}</strong></span>{% endfor %}</div>
+          <div class="agent-list">{% for agent in agents %}<div class="agent-row"><span class="avatar">{{ agent.name[0] }}</span><div><strong>{{ agent.name }}</strong><small>{{ agent.campaign }}</small></div><span class="agent-state state-text-{{ agent.state }}">{{ agent.state_label }}</span><span class="heartbeat">{% if agent.heartbeat is not none %}{{ agent.heartbeat }}s ago{% else %}No pulse{% endif %}</span></div>{% endfor %}</div>
         </article>
-      </aside>
-    </section>
-
-    <section class="campaign-strip">
-      <div><p class="eyebrow">Campaign policy</p><h2>Configured lanes</h2></div>
-      <div class="campaign-list">
-        {% for campaign in campaigns %}
-        <article><span class="lane"></span><div><strong>{{ campaign.name }}</strong><small>{{ campaign.language }} · {{ campaign.provider }}</small></div><span>{{ campaign.mode }}</span><code>{{ '%.2f'|format(campaign.risk_percent) }}% risk</code></article>
-        {% endfor %}
       </div>
+      <div class="operations-grid">
+        <article class="panel calls-panel">
+          <div class="panel-head"><div><p class="eyebrow">At-least-once workflow</p><h2>Durable call intents</h2></div><span class="panel-note">Every row links to safety</span></div>
+          {% if calls %}<div class="table-wrap"><table><thead><tr><th>Call</th><th>Borrower / campaign</th><th>Human</th><th>Provider</th><th>State</th><th>Safety</th></tr></thead><tbody>{% for call in calls %}<tr><td><code>{{ call.id }}</code><small>{{ call.mode }}</small></td><td><strong>{{ call.borrower }}</strong><small>{{ call.campaign }}</small></td><td>{{ call.agent }}</td><td>{{ call.provider }}</td><td><span class="call-state state-text-{{ call.state }}">{{ call.state_label }}</span></td><td><code class="receipt-code">{{ call.safety_id }}</code></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="panel-empty">Approved call intents will appear here.</div>{% endif %}
+        </article>
+        <aside class="side-stack">
+          <article class="panel compact-panel"><div class="panel-head"><div><p class="eyebrow">Mock telecom</p><h2>Provider health</h2></div></div>{% if providers %}<div class="provider-list">{% for provider in providers %}<div><span class="provider-mark">{{ provider.name[0] }}</span><p><strong>{{ provider.name }}</strong><small>{{ provider.attempts }} attempts · {{ provider.failure_rate }}% failed</small></p><span class="health {{ provider.state }}"><i></i>{{ provider.state_label }}</span></div>{% endfor %}</div>{% else %}<div class="panel-empty">Provider telemetry starts with the first campaign.</div>{% endif %}</article>
+          <article class="panel compact-panel"><div class="panel-head"><div><p class="eyebrow">Bounded failure path</p><h2>Incidents</h2></div><span class="count-badge">{{ incidents|length }}</span></div>{% if incidents %}<div class="incident-list">{% for incident in incidents %}<div><i></i><p><strong>{{ incident.kind }}</strong><small>Call {{ incident.call_id }} · {{ incident.status }}</small></p></div>{% endfor %}</div>{% else %}<div class="clear-state"><span>✓</span><p><strong>Quiet system</strong><small>No incidents require attention.</small></p></div>{% endif %}</article>
+        </aside>
+      </div>
+      <section class="campaign-strip"><div><p class="eyebrow">Operator-owned policy</p><h2>Campaign lanes</h2></div><div class="campaign-list">{% for campaign in campaigns %}<article><span class="lane"></span><div><strong>{{ campaign.name }}</strong><small>{{ campaign.language }} · {{ campaign.provider }}</small></div><span>{{ campaign.mode }}</span><code>{{ '%.2f'|format(campaign.risk_percent) }}% risk</code></article>{% endfor %}</div></section>
+      {% endif %}
     </section>
-    {% endif %}
 
-    <footer>
-      <p>CredResolve SmartDialer <span>·</span> Human agents, confidence-bounded pacing.</p>
-      <p>Mock telecom only <span>·</span> PostgreSQL source of truth</p>
-    </footer>
+    <section class="submission-note"><div><p class="eyebrow">Submission boundary</p><h2>Built to be inspected, not merely presented.</h2></div><p>Python modular monolith · PostgreSQL concurrency · deterministic simulation · load tests · CI startup smoke test · REST + CLI · no real borrower calls.</p><a href="https://github.com/UtkarshDubeyGIT/dubey-smart-dialer">Review source <span>↗</span></a></section>
+    <footer><p>CredResolve SmartDialer <span>·</span> Graduate AI/ML systems assignment</p><p>Human agents <span>·</span> Explainable decisions <span>·</span> Mock telecom only</p></footer>
   </main>
 </body>
 </html>

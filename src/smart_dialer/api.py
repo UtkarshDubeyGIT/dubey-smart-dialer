@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated, Literal
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session, sessionmaker
@@ -20,10 +20,13 @@ from smart_dialer.db.session import build_session_factory
 from smart_dialer.dashboard import load_dashboard
 from smart_dialer.config import get_settings
 from smart_dialer.domain.states import AgentState, CallState
+from smart_dialer.domain.pacing import PacingSnapshot, SafetyContext
 from smart_dialer.providers.base import NormalizedProviderEvent
 from smart_dialer.services.coordinator import run_pacing_tick
 from smart_dialer.services.events import ingest_provider_event
+from smart_dialer.services.pacing import PredictivePacingEngine
 from smart_dialer.services.presence import handle_graceful_departure
+from smart_dialer.services.safety import SafetyController
 
 
 class CampaignCreate(BaseModel):
@@ -123,6 +126,64 @@ def create_app(
     def health(db: Db) -> dict:
         db.execute(text("SELECT 1"))
         return {"status": "ok"}
+
+    @app.get("/v1/demo/pacing-decision")
+    def explain_pacing_decision(
+        available_agents: Annotated[int, Query(ge=0, le=100)] = 10,
+        ringing_calls: Annotated[int, Query(ge=0, le=100)] = 2,
+        observed_answers: Annotated[int, Query(ge=0, le=500)] = 30,
+        observed_attempts: Annotated[int, Query(ge=0, le=500)] = 100,
+        expected_releases_within_setup: Annotated[int, Query(ge=0, le=100)] = 0,
+        risk_tolerance: Annotated[float, Query(ge=0.0, le=0.01)] = 0.005,
+        provider_healthy: bool = True,
+        agent_data_stale: bool = False,
+        rapid_agent_drop: bool = False,
+    ) -> dict:
+        """Run a side-effect-free explanation through the production decision code."""
+        if observed_answers > observed_attempts:
+            raise HTTPException(
+                status_code=422,
+                detail="observed_answers cannot exceed observed_attempts",
+            )
+        snapshot = PacingSnapshot(
+            available_agents=available_agents,
+            ringing_calls=ringing_calls,
+            observed_answers=observed_answers,
+            observed_attempts=observed_attempts,
+            expected_releases_within_setup=expected_releases_within_setup,
+            average_setup_seconds=8.0,
+            average_talk_seconds=92.0,
+        )
+        proposal = PredictivePacingEngine().propose(snapshot)
+        receipt = SafetyController().evaluate(
+            proposal,
+            SafetyContext(
+                available_agents=available_agents,
+                observed_answers=observed_answers,
+                observed_attempts=observed_attempts,
+                requested_risk=risk_tolerance,
+                provider_healthy=provider_healthy,
+                agent_data_stale=agent_data_stale,
+                rapid_agent_drop=rapid_agent_drop,
+            ),
+        )
+        return {
+            "engine": "production",
+            "side_effects": "none",
+            "inputs": {
+                "available_agents": available_agents,
+                "ringing_calls": ringing_calls,
+                "observed_answers": observed_answers,
+                "observed_attempts": observed_attempts,
+                "expected_releases_within_setup": expected_releases_within_setup,
+                "risk_tolerance": risk_tolerance,
+                "provider_healthy": provider_healthy,
+                "agent_data_stale": agent_data_stale,
+                "rapid_agent_drop": rapid_agent_drop,
+            },
+            "proposal": proposal.__dict__,
+            "receipt": receipt.__dict__,
+        }
 
     @app.post("/v1/campaigns", status_code=201)
     def create_campaign(body: CampaignCreate, db: Db) -> dict:

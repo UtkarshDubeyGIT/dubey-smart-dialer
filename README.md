@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/UtkarshDubeyGIT/dubey-smart-dialer/actions/workflows/ci.yml/badge.svg)](https://github.com/UtkarshDubeyGIT/dubey-smart-dialer/actions/workflows/ci.yml)
 
-A safety-first functional prototype for **human collections agents**. It implements progressive dialing, confidence-bounded predictive pacing, a non-bypassable Safety Controller, PostgreSQL-safe allocation, two deterministic telecom simulators, crash recovery, failure simulations, and contention tests.
+A graduate-level **AI/ML systems assignment** and safety-first functional prototype for **human collections agents**. It implements progressive dialing, confidence-bounded predictive pacing, a non-bypassable Safety Controller, PostgreSQL-safe allocation, two deterministic telecom simulators, crash recovery, failure simulations, and contention tests.
 
 No real borrower is called. `PlivoMockProvider` and `BlandMockProvider` make **zero network requests**.
 
@@ -48,9 +48,11 @@ curl -s http://localhost:8000/v1/incidents | python3 -m json.tool
 
 Stop with `docker compose down`. Reset the database too with `make clean`.
 
-## Reviewer dashboard
+## Live reviewer experience
 
-The root URL opens a responsive, read-only operational dashboard inspired by CredResolve's identity system. It shows campaign policy, heartbeat-qualified human capacity, recent call intents, provider health, incidents, and the exact Safety Controller receipt authorizing each batch. The page refreshes every 15 seconds and has no frontend build step.
+The root URL opens a responsive, read-only product walkthrough inspired by CredResolve's identity system. Its interactive **Decision Lab** lets a reviewer change human capacity, observed answer rate, risk tolerance, and failure scenarios, then watch the production `PredictivePacingEngine` and `SafetyController` approve, reduce, or force progressive mode. `GET /v1/demo/pacing-decision` is side-effect-free and uses the real production decision classes—no call intents are created and no frontend-only safety formula exists.
+
+The same page explains the graduate AI/ML problem, Wilson confidence bound, exact binomial-tail policy, schema-enforced safety receipt, and progressive fallbacks before showing live PostgreSQL evidence: campaign policy, heartbeat-qualified human capacity, recent call intents, provider health, incidents, and the exact receipt authorizing each batch. There is no frontend build step.
 
 ## Render deployment
 
@@ -67,7 +69,7 @@ The local API remains writable because read-only mode is enabled only by the Ren
 
 ```bash
 make setup       # locked Python 3.12 environment with uv
-make test        # 90 unit + real PostgreSQL integration tests
+make test        # 92 unit + real PostgreSQL integration tests
 make simulate    # pacing + PostgreSQL-executed failure evidence
 make load-test   # reports/load-test.{json,csv}; combined 100/1,000/10,000 table
 make smoke       # fresh Compose build, migration, API, CLI, demo, and worker check
@@ -150,6 +152,7 @@ GET  /v1/provider-events
 GET  /v1/provider-health
 GET  /v1/incidents
 GET  /v1/manual-review
+GET  /v1/demo/pacing-decision  # side-effect-free interactive explanation
 ```
 
 ```bash

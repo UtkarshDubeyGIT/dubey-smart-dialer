@@ -84,14 +84,76 @@ def test_dashboard_styles_are_packaged_with_the_application(
     client: TestClient,
 ) -> None:
     response = client.get("/static/dashboard.css")
+    interaction = client.get("/static/dashboard.js")
     dashboard = client.get("/dashboard")
 
     assert response.status_code == 200
+    assert interaction.status_code == 200
     assert "--orange: #ff641e" in response.text
-    assert ".identity-orb" in response.text
+    assert ".decision-lab" in response.text
     assert "radial-gradient" in response.text
-    assert "Live pacing curve" in dashboard.text
-    assert 'href="/static/dashboard.css"' in dashboard.text
+    assert "Graduate AI/ML systems assignment" in dashboard.text
+    assert "Watch the dialer decide" in dashboard.text
+    assert 'data-decision-lab' in dashboard.text
+    assert 'href="/static/dashboard.css?v=2"' in dashboard.text
+    assert 'src="/static/dashboard.js?v=2"' in dashboard.text
+
+
+def test_decision_lab_runs_the_production_pacing_and_safety_path(
+    client: TestClient,
+) -> None:
+    response = client.get(
+        "/v1/demo/pacing-decision",
+        params={
+            "available_agents": 10,
+            "ringing_calls": 2,
+            "observed_answers": 30,
+            "observed_attempts": 100,
+            "risk_tolerance": 0.005,
+        },
+    )
+
+    assert response.status_code == 200
+    result = response.json()
+    assert result["engine"] == "production"
+    assert result["proposal"]["requested_calls"] > 10
+    assert 10 < result["receipt"]["approved_calls"] <= result["proposal"]["requested_calls"]
+    assert result["receipt"]["effective_mode"] == "predictive"
+    assert result["receipt"]["answer_rate_upper_bound"] > 0.30
+    assert result["receipt"]["overload_probability"] <= 0.005
+
+
+def test_decision_lab_exposes_live_progressive_fallbacks(
+    session_factory,
+) -> None:
+    app = create_app(session_factory=session_factory, read_only=True)
+    with TestClient(app) as read_only_client:
+        zero_risk = read_only_client.get(
+            "/v1/demo/pacing-decision",
+            params={
+                "available_agents": 7,
+                "observed_answers": 30,
+                "observed_attempts": 100,
+                "risk_tolerance": 0,
+            },
+        )
+        rapid_drop = read_only_client.get(
+            "/v1/demo/pacing-decision",
+            params={
+                "available_agents": 7,
+                "observed_answers": 30,
+                "observed_attempts": 100,
+                "rapid_agent_drop": True,
+            },
+        )
+
+    assert zero_risk.status_code == 200
+    assert zero_risk.json()["receipt"]["effective_mode"] == "progressive"
+    assert zero_risk.json()["receipt"]["approved_calls"] == 7
+    assert "zero risk policy" in zero_risk.json()["receipt"]["reasons"]
+    assert rapid_drop.status_code == 200
+    assert rapid_drop.json()["receipt"]["effective_mode"] == "progressive"
+    assert "rapid agent availability drop" in rapid_drop.json()["receipt"]["reasons"]
 
 
 def test_public_demo_mode_keeps_dashboard_visible_but_blocks_mutations(
